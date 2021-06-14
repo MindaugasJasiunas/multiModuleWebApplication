@@ -1,12 +1,17 @@
 package com.example.demo.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.UUID;
 
 @Data
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 
 @Table(name = "userentity")
 @Entity
@@ -16,6 +21,8 @@ public class UserEntity {
     @GeneratedValue( strategy = GenerationType.SEQUENCE, generator = "userentity_sequence")
     @Column(name = "id")
     private Long id;
+    @Column(name = "public_id")
+    private UUID publicId= UUID.randomUUID();
     @Column(name = "first_name")
     private String firstName;
     @Column(name = "last_name")
@@ -24,7 +31,5 @@ public class UserEntity {
     private String encryptedPassword;
     @Column(name = "email")
     private String email;
-
-
 
 }
