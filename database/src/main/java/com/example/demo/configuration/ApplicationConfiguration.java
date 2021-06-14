@@ -60,10 +60,5 @@ public class ApplicationConfiguration {
         return hibernateProperties;
     }
 
-    @Bean
-    public NamedParameterJdbcTemplate namedParamJdbcTemplate() {
-        return new NamedParameterJdbcTemplate(dataSource());
-    }
-
 
 }
