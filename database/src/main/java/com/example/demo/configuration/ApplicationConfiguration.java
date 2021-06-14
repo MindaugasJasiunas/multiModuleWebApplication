@@ -5,6 +5,7 @@ import com.zaxxer.hikari.HikariDataSource;
 import org.hibernate.Session;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -57,6 +58,11 @@ public class ApplicationConfiguration {
         hibernateProperties.setProperty("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
 
         return hibernateProperties;
+    }
+
+    @Bean
+    public NamedParameterJdbcTemplate namedParamJdbcTemplate() {
+        return new NamedParameterJdbcTemplate(dataSource());
     }
 
 
