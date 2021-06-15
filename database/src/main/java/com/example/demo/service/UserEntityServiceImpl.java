@@ -1,32 +1,51 @@
 package com.example.demo.service;
 
-import com.example.demo.dao.UserEntityDAO;
+import com.example.demo.dao.UserEntityRepository;
 import com.example.demo.entity.UserEntity;
-import org.hibernate.Session;
-import org.hibernate.query.Query;
+import org.hibernate.exception.ConstraintViolationException;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 public class UserEntityServiceImpl implements UserEntityService{
-    private UserEntityDAO userEntityDAO;
+    private UserEntityRepository userEntityRepo;
 
-    public UserEntityServiceImpl(UserEntityDAO userEntityDAO) {
-        this.userEntityDAO = userEntityDAO;
+    public UserEntityServiceImpl(UserEntityRepository userEntityRepo) {
+        this.userEntityRepo = userEntityRepo;
     }
 
     @Override
-    public Long createUserEntity(UserEntity s){
-        return userEntityDAO.createUserEntity(s);
+    public Optional<UserEntity> saveOrUpdate(UserEntity user){
+        Optional<UserEntity> userSavedInDB=Optional.empty();
+        try{
+            UserEntity saved= userEntityRepo.save(user);
+            userSavedInDB= Optional.of(saved);
+        }catch (ConstraintViolationException emailDuplicate){
+            //email already exists in DB
+        }
+        return userSavedInDB;
     }
 
     @Override
-    public List<UserEntity> getAllUserEntities(){
-        return userEntityDAO.getAllUserEntities();
+    public List<UserEntity> getUsers(){
+        return userEntityRepo.findAll();
     }
 
     @Override
-    public Long getUserEntitiesCount(){
-        return userEntityDAO.getUserEntitiesCount();
+    public Optional<UserEntity> findUserEntityByEmail(String email){
+        return userEntityRepo.findUserEntityByEmail(email);
+    }
+
+    @Override
+    public Optional<UserEntity> findUserEntityByPublicId(UUID publicId){
+        return userEntityRepo.findUserEntityByPublicId(publicId);
+    }
+
+    @Override
+    public void deleteUserEntityByPublicId(UUID publicId){
+        userEntityRepo.deleteUserEntityByPublicId(publicId);
     }
 
 

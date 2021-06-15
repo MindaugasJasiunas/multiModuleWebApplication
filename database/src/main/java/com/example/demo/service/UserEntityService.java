@@ -3,9 +3,15 @@ package com.example.demo.service;
 import com.example.demo.entity.UserEntity;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 public interface UserEntityService {
-    Long createUserEntity(UserEntity s);
-    List<UserEntity> getAllUserEntities();
-    Long getUserEntitiesCount();
+    Optional<UserEntity> saveOrUpdate(UserEntity user);
+    List<UserEntity> getUsers();
+    Optional<UserEntity> findUserEntityByEmail(String email);
+    Optional<UserEntity> findUserEntityByPublicId(UUID publicId);
+    void deleteUserEntityByPublicId(UUID publicId);
+
+
 }
