@@ -21,7 +21,7 @@ public class UserEntity {
     @GeneratedValue( strategy = GenerationType.SEQUENCE, generator = "userentity_sequence")
     @Column(name = "id")
     private Long id;
-    @Column(name = "public_id")
+    @Column(name = "public_id", unique = true)
     private UUID publicId= UUID.randomUUID();
     @Column(name = "first_name")
     private String firstName;
@@ -29,7 +29,7 @@ public class UserEntity {
     private String lastName;
     @Column(name = "encrypted_password")
     private String encryptedPassword;
-    @Column(name = "email")
+    @Column(name = "email", unique = true)
     private String email;
 
 }
