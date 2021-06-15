@@ -22,6 +22,7 @@ public class UserEntity {
     @Column(name = "id")
     private Long id;
     @Column(name = "public_id", unique = true)
+    @Builder.Default
     private UUID publicId= UUID.randomUUID();
     @Column(name = "first_name")
     private String firstName;
