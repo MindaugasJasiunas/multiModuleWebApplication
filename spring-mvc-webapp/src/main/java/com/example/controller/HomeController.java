@@ -45,6 +45,11 @@ public class HomeController {
         return "register";
     }
 
+    @RequestMapping("/login")
+    public String showLoginPage(){
+        return "login";
+    }
+
 
 }
 
