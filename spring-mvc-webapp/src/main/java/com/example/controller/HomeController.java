@@ -40,6 +40,10 @@ public class HomeController {
         return "admin";
     }
 
+    @RequestMapping("/register")
+    public String showRegisterPage(){
+        return "register";
+    }
 
 
 }
