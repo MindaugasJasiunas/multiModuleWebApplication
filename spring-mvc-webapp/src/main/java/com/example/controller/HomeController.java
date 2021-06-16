@@ -25,9 +25,14 @@ public class HomeController {
         return "product-page";
     }
 
-    @RequestMapping("checkout")
+    @RequestMapping("/checkout")
     public String showCheckoutPage(){
         return "checkout";
+    }
+
+    @RequestMapping("/cart")
+    public String showShoppingCartPage(){
+        return "cart";
     }
 
 
