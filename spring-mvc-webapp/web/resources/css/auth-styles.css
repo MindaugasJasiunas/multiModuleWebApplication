@@ -7404,13 +7404,13 @@ textarea.form-control-lg {
   color: inherit !important;
 }
 
-/*.bg-primary {*/
-/*  background-color: #0d6efd !important;*/
-/*}*/
+.bg-primary {
+  background-color: #0d6efd !important;
+}
 
-/*.bg-secondary {
+.bg-secondary {
   background-color: #6c757d !important;
-}*/
+}
 
 .bg-success {
   background-color: #198754 !important;
