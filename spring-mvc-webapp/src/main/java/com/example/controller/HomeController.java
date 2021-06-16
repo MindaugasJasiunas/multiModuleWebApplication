@@ -1,6 +1,8 @@
 package com.example.controller;
 
-import com.example.demo.dao.UserEntityDAOImpl;
+import com.example.demo.dao.UserEntityRepository;
+import com.example.demo.entity.UserEntity;
+import com.example.demo.service.UserEntityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,24 +12,19 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 public class HomeController {
     @Autowired
-    UserEntityDAOImpl userEntityDAO;
+    UserEntityService service;
 
     @RequestMapping("/")
-    public String showHomePage(){
-        return "index";
+    public String showProductListPage() {
+        return "product-list-page";
     }
 
-    @RequestMapping("/list")
-    public String showList(Model model){
-        model.addAttribute("users",userEntityDAO.getAllUserEntities());
-        return "list";
+    @RequestMapping("/product")
+    public String showProductPage() {
+        return "product-page";
     }
 
-    @RequestMapping("/count")
-    @ResponseBody
-    public String countUserEntities() {
-        return userEntityDAO.getUserEntitiesCount()+"";
-    }
+
 
 }
 
