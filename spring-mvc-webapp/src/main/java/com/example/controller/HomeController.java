@@ -3,6 +3,7 @@ package com.example.controller;
 import com.example.demo.dao.UserEntityRepository;
 import com.example.demo.entity.UserEntity;
 import com.example.demo.service.UserEntityService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,6 +23,11 @@ public class HomeController {
     @RequestMapping("/product")
     public String showProductPage() {
         return "product-page";
+    }
+
+    @RequestMapping("checkout")
+    public String showCheckoutPage(){
+        return "checkout";
     }
 
 
