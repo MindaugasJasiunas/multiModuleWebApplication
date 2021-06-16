@@ -1,71 +1,8 @@
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <title>Shoping Cart</title>
-    <!-- Favicon-->
-    <link rel="icon" type="image/x-icon" href="resources/favicon.ico" th:href="@{/resources/favicon.ico}">
-    <!-- Bootstrap icons-->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" th:href="@{/webjars/bootstrap-icons/1.5.0/font/bootstrap-icons.css}" rel="stylesheet">
-    <!-- Core theme CSS (includes Bootstrap)-->
-    <link href="resources/css/styles.css" th:href="@{/resources/css/styles.css}" rel="stylesheet">
-    <!-- Bootstrap core JS-->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" th:src="@{/webjars/bootstrap/5.0.1/js/bootstrap.bundle.min.js}"></script>
-
-    <!--   Only for this page -->
-    <!-- FontAwesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
-    <!-- Additional local style -->
-    <style>
-        /*@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200&display=swap');*/
-
-        body {
-            /*font-family: 'Manrope', sans-serif;*/
-            background: #eee
-        }
-
-        .size span {
-            font-size: 11px
-        }
-
-        .color span {
-            font-size: 11px
-        }
-
-        .product-details {
-            margin-right: 70px
-        }
-
-        .gift-card:focus {
-            box-shadow: none
-        }
-
-        .pay-button {
-            color: #fff
-        }
-
-        .pay-button:hover {
-            color: #fff
-        }
-
-        .pay-button:focus {
-            color: #fff;
-            box-shadow: none
-        }
-
-        .text-grey {
-            color: #a39f9f
-        }
-
-        .qty i {
-            font-size: 11px
-        }</style>
+<head th:include="fragments/head.html::headFragment">
 
 </head>
-<body>
+<body class="cart-body">
 
 <!-- Navigation-->
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
