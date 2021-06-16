@@ -50,6 +50,11 @@ public class HomeController {
         return "login";
     }
 
+    @RequestMapping("/forgot")
+    public String showForgotPasswordPage(){
+        return "forgot-password";
+    }
+
 
 }
 
