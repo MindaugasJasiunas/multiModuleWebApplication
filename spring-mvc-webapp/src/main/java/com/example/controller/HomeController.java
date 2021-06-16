@@ -35,6 +35,11 @@ public class HomeController {
         return "cart";
     }
 
+    @RequestMapping("/admin")
+    public String showAdminPage(){
+        return "admin";
+    }
+
 
 
 }
