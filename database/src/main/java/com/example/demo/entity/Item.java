@@ -46,6 +46,10 @@ public class Item {
             inverseJoinColumns = @JoinColumn(name = "size_id"))
     private Set<Size> sizeSet=new HashSet<>();
 
+    @OneToMany(cascade= CascadeType.ALL)
+    @JoinColumn(name="item_id") //foreign key 'gender_id' to Gender table
+    private Set<Gender> genderSet= new HashSet<>();
+
 
     //helper method
     public void addCategory(Category category){
@@ -69,6 +73,14 @@ public class Item {
             sizeSet= new HashSet<>();
         }
         sizeSet.add(size);
+    }
+
+    //helper method
+    public void addGender(Gender gender){
+        if(genderSet==null){
+            genderSet= new HashSet<>();
+        }
+        genderSet.add(gender);
     }
 
 
