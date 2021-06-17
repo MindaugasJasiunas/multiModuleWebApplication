@@ -33,6 +33,10 @@ public class Item {
     @Convert(converter = MonetaryAmountConverter.class)
     private MonetaryAmount price;
 
+    @OneToMany(cascade= CascadeType.ALL) //One THIS class, MANY others
+    @JoinColumn(name="item_id") //foreign key 'item_id' to item_image table
+    private Set<ItemImage> images= new HashSet<>();
+
 
     //helper method
     public void addCategory(Category category){
@@ -40,6 +44,14 @@ public class Item {
             categories= new HashSet<>();
         }
         categories.add(category);
+    }
+
+    //helper method
+    public void addImage(ItemImage image){
+        if(images==null){
+            images= new HashSet<>();
+        }
+        images.add(image);
     }
 
 
