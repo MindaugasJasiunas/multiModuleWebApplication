@@ -15,8 +15,8 @@ import java.util.Set;
 @Entity
 public class Category {
     @Id
-    @SequenceGenerator( name = "images_sequence", sequenceName = "images_sequence", allocationSize = 1)
-    @GeneratedValue( strategy = GenerationType.SEQUENCE, generator = "images_sequence")
+    @SequenceGenerator( name = "category_sequence", sequenceName = "category_sequence", allocationSize = 1)
+    @GeneratedValue( strategy = GenerationType.SEQUENCE, generator = "category_sequence")
     @Column(name = "id", unique = true)
     @EqualsAndHashCode.Include
     private long id;
