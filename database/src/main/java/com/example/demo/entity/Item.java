@@ -41,4 +41,8 @@ public class Item {
         }
         categories.add(category);
     }
+
+
+    /*@OneToMany(mappedBy = "item")
+    private Set<StoreItem> groupStoreItem;*/
 }
