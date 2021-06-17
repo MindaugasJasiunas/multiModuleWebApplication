@@ -16,6 +16,8 @@
         <postgresql.version>42.2.20</postgresql.version>
         <hibernate.version>5.4.31.Final</hibernate.version><!--5.4.12.Final-->
         <hikaricp.version>3.2.0</hikaricp.version>
+        <spring.data.version>2.1.0.RELEASE</spring.data.version>
+        <java.money.version>1.1</java.money.version>
 
         <maven.compiler.plugin.version>3.8.0</maven.compiler.plugin.version>
     </properties>
@@ -75,10 +77,15 @@
         <dependency>
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-jpa</artifactId>
-            <version>2.1.0.RELEASE</version>
+            <version>${spring.data.version}</version>
         </dependency>
 
-
+        <!-- Java Money & Currency JSR -->
+        <dependency>
+            <groupId>org.javamoney</groupId>
+            <artifactId>moneta</artifactId>
+            <version>${java.money.version}</version>
+        </dependency>
 
     </dependencies>
 
