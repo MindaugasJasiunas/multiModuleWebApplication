@@ -3,6 +3,7 @@ package com.example.demo.entity;
 
 import com.example.demo.converters.MonetaryAmountConverter;
 import lombok.Data;
+import lombok.ToString;
 
 import javax.money.MonetaryAmount;
 import javax.persistence.*;
@@ -11,6 +12,7 @@ import java.util.Set;
 import java.util.UUID;
 
 @Data
+@ToString
 
 @Entity
 public class Item {
@@ -24,6 +26,7 @@ public class Item {
     @Column(name = "title")
     private String title;
 
+    @ToString.Exclude
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "item_category", joinColumns = @JoinColumn(name = "item_id"),
             inverseJoinColumns = @JoinColumn(name = "category_id"))

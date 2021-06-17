@@ -3,6 +3,7 @@ package com.example.demo.entity;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
@@ -23,6 +24,7 @@ public class Category {
     @Column(name = "category", unique = true)
     private String categoryName;
 
+    @ToString.Exclude
     @EqualsAndHashCode.Exclude
     @ManyToMany(mappedBy = "categories", fetch = FetchType.EAGER)
     private Set<Item> items=new HashSet<>();
