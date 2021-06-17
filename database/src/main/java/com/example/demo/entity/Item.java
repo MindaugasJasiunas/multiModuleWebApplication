@@ -6,6 +6,8 @@ import lombok.Data;
 
 import javax.money.MonetaryAmount;
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Data
@@ -19,12 +21,24 @@ public class Item {
     private long id;
     @Column(name = "public_id", unique = true)
     private UUID publicId= UUID.randomUUID();
-
+    @Column(name = "title")
     private String title;
 
-    private String category;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "item_category", joinColumns = @JoinColumn(name = "item_id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id"))
+    private Set<Category> categories=new HashSet<>();
 
     @Column(name = "price", columnDefinition = "numeric(19,2)") // 'numeric' especially recommended for storing monetary amounts and other quantities where exactness is required (Postgres).
     @Convert(converter = MonetaryAmountConverter.class)
     private MonetaryAmount price;
+
+
+    //helper method
+    public void addCategory(Category category){
+        if(categories==null){
+            categories= new HashSet<>();
+        }
+        categories.add(category);
+    }
 }
