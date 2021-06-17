@@ -41,6 +41,11 @@ public class Item {
     @JoinColumn(name= "dimensions_id")
     private Dimensions dimensions; //foreign key "item_id" in Item table
 
+    @ManyToMany
+    @JoinTable(name = "item_size", joinColumns = @JoinColumn(name = "item_id"),
+            inverseJoinColumns = @JoinColumn(name = "size_id"))
+    private Set<Size> sizeSet=new HashSet<>();
+
 
     //helper method
     public void addCategory(Category category){
@@ -56,6 +61,14 @@ public class Item {
             images= new HashSet<>();
         }
         images.add(image);
+    }
+
+    //helper method
+    public void addSize(Size size){
+        if(sizeSet==null){
+            sizeSet= new HashSet<>();
+        }
+        sizeSet.add(size);
     }
 
 
