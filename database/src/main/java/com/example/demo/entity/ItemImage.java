@@ -12,8 +12,8 @@ import java.util.Set;
 @Entity
 public class ItemImage {
     @Id
-    @SequenceGenerator( name = "images_sequence", sequenceName = "images_sequence", allocationSize = 1)
-    @GeneratedValue( strategy = GenerationType.SEQUENCE, generator = "images_sequence")
+    @SequenceGenerator( name = "itemimage_sequence", sequenceName = "itemimage_sequence", allocationSize = 1)
+    @GeneratedValue( strategy = GenerationType.SEQUENCE, generator = "itemimage_sequence")
     @Column(name = "id", unique = true)
     private long id;
     @Column(name = "image_name")
