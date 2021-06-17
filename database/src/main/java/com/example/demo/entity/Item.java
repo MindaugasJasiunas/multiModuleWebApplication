@@ -37,6 +37,10 @@ public class Item {
     @JoinColumn(name="item_id") //foreign key 'item_id' to item_image table
     private Set<ItemImage> images= new HashSet<>();
 
+    @OneToOne(cascade= CascadeType.ALL)
+    @JoinColumn(name= "dimensions_id")
+    private Dimensions dimensions; //foreign key "item_id" in Item table
+
 
     //helper method
     public void addCategory(Category category){
