@@ -5,7 +5,9 @@ import com.example.demo.converters.MonetaryAmountConverter;
 import lombok.Data;
 import lombok.ToString;
 
+import javax.money.Monetary;
 import javax.money.MonetaryAmount;
+import javax.money.NumberValue;
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -25,6 +27,8 @@ public class Item {
     private UUID publicId= UUID.randomUUID();
     @Column(name = "title")
     private String title;
+    @Column(name = "description")
+    private String description;
 
     @ToString.Exclude
     @ManyToMany(fetch = FetchType.EAGER)
