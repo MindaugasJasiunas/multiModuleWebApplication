@@ -23,6 +23,6 @@ public class StoreItem implements Serializable {
 //    @JoinColumn(name= "id", insertable = false, updatable = false)
     private Store store;
 
-    @Column(name = "quantity")
-    private long quantity;
+    @Column(name = "quantity", nullable = false)
+    private Integer quantity;
 }
