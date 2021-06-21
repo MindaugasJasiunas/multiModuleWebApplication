@@ -26,7 +26,10 @@
                     </h2>
                     <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
                         <div class="accordion-body">
-                            <strong>This is the first item's accordion body.</strong> It is shown by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+                            <div th:each="category : ${categoryList}">
+                                <input type="checkbox" th:id="${category.categoryName}" th:name="${category.categoryName}" checked>
+                                <label th:for="${category.categoryName}" th:text="${category.categoryName}">Category Name</label>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -38,7 +41,10 @@
                     </h2>
                     <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
                         <div class="accordion-body">
-                            <strong>This is the second item's accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+                            <div th:each="size : ${sizeList}">
+                                <input type="checkbox" th:id="${size.sizeTitle}" th:name="${size.sizeTitle}" checked>
+                                <label th:for="${size.sizeTitle}" th:text="${size.sizeTitle}">Category Name</label>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -50,7 +56,10 @@
                     </h2>
                     <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
                         <div class="accordion-body">
-                            <strong>This is the third item's accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+                            <div th:each="gender : ${genderList}">
+                                <input type="checkbox" th:id="${gender.gender}" th:name="${gender.gender}" checked>
+                                <label th:for="${gender.gender}" th:text="${gender.gender}">Gender</label>
+                            </div>
                         </div>
                     </div>
                 </div>
