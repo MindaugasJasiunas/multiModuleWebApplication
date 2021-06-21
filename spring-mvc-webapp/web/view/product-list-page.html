@@ -14,163 +14,239 @@
     </div>
 </header>
 
-<!-- Section-->
 <section class="py-5">
     <div class="container px-4 px-lg-5 mt-5">
-        <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
-            <div class="col mb-5">
-                <div class="card h-100">
-                    <!-- Product image-->
-                    <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" th:href="@{/resources/image.jpg}" alt="...">
-                    <!-- Product details-->
-                    <div class="card-body p-4">
-                        <div class="text-center">
-                            <!-- Product name-->
-                            <h5 class="fw-bolder">Fancy Product</h5>
-                            <!-- Product price-->
-                            $80.00
+        <div class="col">
+            <div class="accordion" id="accordionExample">
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingOne">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                            Category
+                        </button>
+                    </h2>
+                    <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                            <strong>This is the first item's accordion body.</strong> It is shown by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
                         </div>
-                    </div>
-                    <!-- Product actions-->
-                    <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                        <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">View</a></div>
                     </div>
                 </div>
-            </div>
-            <div class="col mb-5">
-                <div class="card h-100">
-                    <!-- Product image-->
-                    <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" th:href="@{/resources/image.jpg}" alt="...">
-                    <!-- Product details-->
-                    <div class="card-body p-4">
-                        <div class="text-center">
-                            <!-- Product name-->
-                            <h5 class="fw-bolder">Special Item</h5>
-                            <!-- Product price-->
-                            $18.00
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingTwo">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                            Size
+                        </button>
+                    </h2>
+                    <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                            <strong>This is the second item's accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
                         </div>
-                    </div>
-                    <!-- Product actions-->
-                    <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                        <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">View</a></div>
                     </div>
                 </div>
-            </div>
-            <div class="col mb-5">
-                <div class="card h-100">
-                    <!-- Product image-->
-                    <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" th:href="@{/resources/image.jpg}" alt="...">
-                    <!-- Product details-->
-                    <div class="card-body p-4">
-                        <div class="text-center">
-                            <!-- Product name-->
-                            <h5 class="fw-bolder">Sale Item</h5>
-                            <!-- Product price-->
-                            $25.00
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingThree">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                            Gender
+                        </button>
+                    </h2>
+                    <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                            <strong>This is the third item's accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
                         </div>
-                    </div>
-                    <!-- Product actions-->
-                    <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                        <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">View</a></div>
-                    </div>
-                </div>
-            </div>
-            <div class="col mb-5">
-                <div class="card h-100">
-                    <!-- Product image-->
-                    <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" th:href="@{/resources/image.jpg}" alt="...">
-                    <!-- Product details-->
-                    <div class="card-body p-4">
-                        <div class="text-center">
-                            <!-- Product name-->
-                            <h5 class="fw-bolder">Popular Item</h5>
-                            <!-- Product price-->
-                            $40.00
-                        </div>
-                    </div>
-                    <!-- Product actions-->
-                    <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                        <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">View</a></div>
-                    </div>
-                </div>
-            </div>
-            <div class="col mb-5">
-                <div class="card h-100">
-                    <!-- Product image-->
-                    <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" th:href="@{/resources/image.jpg}" alt="...">
-                    <!-- Product details-->
-                    <div class="card-body p-4">
-                        <div class="text-center">
-                            <!-- Product name-->
-                            <h5 class="fw-bolder">Sale Item</h5>
-                            <!-- Product price-->
-                            $25.00
-                        </div>
-                    </div>
-                    <!-- Product actions-->
-                    <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                        <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">View</a></div>
-                    </div>
-                </div>
-            </div>
-            <div class="col mb-5">
-                <div class="card h-100">
-                    <!-- Product image-->
-                    <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" th:href="@{/resources/image.jpg}" alt="...">
-                    <!-- Product details-->
-                    <div class="card-body p-4">
-                        <div class="text-center">
-                            <!-- Product name-->
-                            <h5 class="fw-bolder">Fancy Product</h5>
-                            <!-- Product price-->
-                            $280.00
-                        </div>
-                    </div>
-                    <!-- Product actions-->
-                    <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                        <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">View</a></div>
-                    </div>
-                </div>
-            </div>
-            <div class="col mb-5">
-                <div class="card h-100">
-                    <!-- Product image-->
-                    <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" th:href="@{/resources/image.jpg}" alt="...">
-                    <!-- Product details-->
-                    <div class="card-body p-4">
-                        <div class="text-center">
-                            <!-- Product name-->
-                            <h5 class="fw-bolder">Special Item</h5>
-                            <!-- Product price-->
-                            $18.00
-                        </div>
-                    </div>
-                    <!-- Product actions-->
-                    <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                        <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">View</a></div>
-                    </div>
-                </div>
-            </div>
-            <div class="col mb-5">
-                <div class="card h-100">
-                    <!-- Product image-->
-                    <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" th:href="@{/resources/image.jpg}" alt="...">
-                    <!-- Product details-->
-                    <div class="card-body p-4">
-                        <div class="text-center">
-                            <!-- Product name-->
-                            <h5 class="fw-bolder">Popular Item</h5>
-                            <!-- Product price-->
-                            $40.00
-                        </div>
-                    </div>
-                    <!-- Product actions-->
-                    <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                        <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">View</a></div>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
+</section>
+<!-- Section-->
+<!-- Section-->
+<section class="py-5">
+    <div class="container px-4 px-lg-5 mt-5">
+        <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+            <div class="col mb-5" id="1-item-column">
+                <div class="card h-100">
+                    <!-- Product image-->
+                    <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" th:src="@{/resources/image.jpg}" alt="..." id="1-product-image">
+                    <!-- Product details-->
+                    <div class="card-body p-4">
+                        <div class="text-center">
+                            <!-- Product name-->
+                            <h5 class="fw-bolder" id="1-product-title">Fancy Product</h5>
+                            <!-- Product price-->
+                            <p id="1-product-price">$80.00</p>
+                        </div>
+                    </div>
+                    <!-- Product actions-->
+                    <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                        <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#" id="1-product-url">View</a></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col mb-5" id="2-item-column">
+                <div class="card h-100">
+                    <!-- Product image-->
+                    <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" th:href="@{/resources/image.jpg}" alt="..." id="2-product-image">
+                    <!-- Product details-->
+                    <div class="card-body p-4">
+                        <div class="text-center">
+                            <!-- Product name-->
+                            <h5 class="fw-bolder" id="2-product-title">Special Item</h5>
+                            <!-- Product price-->
+                            <p id="2-product-price">$18.00</p>
+                        </div>
+                    </div>
+                    <!-- Product actions-->
+                    <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                        <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#" id="2-product-url">View</a></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col mb-5" id="3-item-column">
+                <div class="card h-100">
+                    <!-- Product image-->
+                    <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" th:href="@{/resources/image.jpg}" alt="..." id="3-product-image">
+                    <!-- Product details-->
+                    <div class="card-body p-4">
+                        <div class="text-center">
+                            <!-- Product name-->
+                            <h5 class="fw-bolder" id="3-product-title">Sale Item</h5>
+                            <!-- Product price-->
+                            <p id="3-product-price">25.00</p>
+                        </div>
+                    </div>
+                    <!-- Product actions-->
+                    <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                        <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#" id="3-product-url">View</a></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col mb-5" id="4-item-column">
+                <div class="card h-100">
+                    <!-- Product image-->
+                    <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" th:href="@{/resources/image.jpg}" alt="..." id="4-product-image">
+                    <!-- Product details-->
+                    <div class="card-body p-4">
+                        <div class="text-center">
+                            <!-- Product name-->
+                            <h5 class="fw-bolder" id="4-product-title">Popular Item</h5>
+                            <!-- Product price-->
+                            <p id="4-product-price">$40.00</p>
+                        </div>
+                    </div>
+                    <!-- Product actions-->
+                    <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                        <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#" id="4-product-url">View</a></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col mb-5" id="5-item-column">
+                <div class="card h-100">
+                    <!-- Product image-->
+                    <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" th:href="@{/resources/image.jpg}" alt="..." id="5-product-image">
+                    <!-- Product details-->
+                    <div class="card-body p-4">
+                        <div class="text-center">
+                            <!-- Product name-->
+                            <h5 class="fw-bolder" id="5-product-title">Sale Item</h5>
+                            <!-- Product price-->
+                            <p id="5-product-price">$25.00</p>
+                        </div>
+                    </div>
+                    <!-- Product actions-->
+                    <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                        <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#" id="5-product-url">View</a></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col mb-5" id="6-item-column">
+                <div class="card h-100">
+                    <!-- Product image-->
+                    <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" th:href="@{/resources/image.jpg}" alt="..." id="6-product-image">
+                    <!-- Product details-->
+                    <div class="card-body p-4">
+                        <div class="text-center">
+                            <!-- Product name-->
+                            <h5 class="fw-bolder" id="6-product-title">Fancy Product</h5>
+                            <!-- Product price-->
+                            <p id="6-product-price">$280.00</p>
+                        </div>
+                    </div>
+                    <!-- Product actions-->
+                    <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                        <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#" id="6-product-url">View</a></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col mb-5" id="7-item-column">
+                <div class="card h-100">
+                    <!-- Product image-->
+                    <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" th:href="@{/resources/image.jpg}" alt="..." id="7-product-image">
+                    <!-- Product details-->
+                    <div class="card-body p-4">
+                        <div class="text-center">
+                            <!-- Product name-->
+                            <h5 class="fw-bolder" id="7-product-title">Special Item</h5>
+                            <!-- Product price-->
+                            <p id="7-product-price">$18.00</p>
+                        </div>
+                    </div>
+                    <!-- Product actions-->
+                    <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                        <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#" id="7-product-url">View</a></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col mb-5" id="8-item-column">
+                <div class="card h-100">
+                    <!-- Product image-->
+                    <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" th:href="@{/resources/image.jpg}" alt="..." id="8-product-image">
+                    <!-- Product details-->
+                    <div class="card-body p-4">
+                        <div class="text-center">
+                            <!-- Product name-->
+                            <h5 class="fw-bolder" id="8-product-title">Popular Item</h5>
+                            <!-- Product price-->
+                            <p id="8-product-price">$40.00</p>
+                        </div>
+                    </div>
+                    <!-- Product actions-->
+                    <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                        <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#" id="8-product-url">View</a></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Pagination Section-->
+<section class="py-5">
+    <div class="container px-4 px-lg-5 mt-5">
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-end">
+
+                <li class="page-item disabled" id="arrow-left" onclick="openPageArrow('left')">
+                    <a class="page-link" href="#" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+
+                <li class="page-item active" id="firstButton">
+                    <a class="page-link" href="#" id="firstNumber" onclick="openPage('first')">1</a>
+                </li>
+                <li class="page-item" id="secondButton">
+                    <a class="page-link" href="#" id="secondNumber" onclick="openPage('second')">2</a>
+                </li>
+                <li class="page-item" id="thirdButton">
+                    <a class="page-link" href="#" id="thirdNumber" onclick="openPage('third')">3</a>
+                </li>
+
+                <li class="page-item" id="arrow-right" onclick="openPageArrow('right')">
+                    <a class="page-link" href="#" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
     </div>
 </section>
 
@@ -178,4 +254,215 @@
 <footer class="py-5 bg-dark" th:include="fragments/footer.html::footerFragment"></footer>
 
 
-</body></html>
+    <!--//1-product-image src
+
+    //1-product-price
+
+    //1-8-->
+
+<script language="javascript" th:inline="javascript">
+    /*<![CDATA[*/
+    let pageCount = /*[[${pageCount}]]*/ 'default';
+    /*]]>*/
+    let pageNumber=1;
+
+    $('#itemID').html("test insert into itemID");
+
+    $(document).ready(function(){
+        enableDisablePaginationArrows();
+        showNumberOfPaginationPages();
+        getJSONDataItems();
+    });
+
+    //hide pagination buttons if there is less than 3 pages
+    function showNumberOfPaginationPages(){
+        //how many buttons to show in pagination
+        if(pageCount==1){
+            document.getElementById("secondButton").style.display = "none";
+            document.getElementById("thirdButton").style.display = "none";
+        }else if(pageCount==2){
+            document.getElementById("thirdButton").style.display = "none";
+        }
+    }
+
+
+    //calls to out REST api endpoint, gets items data as JSON, populates data
+    function getJSONDataItems(){
+        var settings={
+            "async":true,
+            "url":"http://localhost:8080/spring_mvc_webapp_war_exploded/api/v1/items?page="+pageNumber,
+            "method":"GET"
+        }
+
+        $.ajax(settings).done(function(response){
+
+            // console.log("JSON objects got - " + response.length);
+
+            //hide all columns before loading page(prevent same items in next page if new page is not full).
+            for(let i=1; i<=8; i++) {
+                document.getElementById(i+"-item-column").style.visibility="hidden";
+            }
+
+            for(let i=0; i<response.length; i++) {
+                document.getElementById((i+1)+"-item-column").style.visibility="visible";
+
+                document.getElementById((i+1)+"-product-title").innerHTML= response[i].title;
+                document.getElementById((i+1)+"-product-price").innerHTML= response[i].price.number+' '+response[i].price.currency.currencyCode;
+                document.getElementById((i+1)+"-product-url").setAttribute('href', window.location .protocol + "//" + window.location.host + "/" + window.location.pathname.split('/')[1] + "/item/"  +  response[i].publicId);
+
+            }
+
+            // var json = $.parseJSON(response); // create an object with the key of the array
+
+            var getUrl = window.location;
+            var baseUrl = getUrl .protocol + "//" + getUrl.host + "/" + getUrl.pathname.split('/')[1];  // http://localhost:8080/spring_mvc_webapp_war_exploded
+            // console.log(baseUrl);
+        })
+    }
+
+
+    // pagination arrows functionality
+    function openPageArrow(arrow){
+        if(arrow==='right'){
+            if ( !document.getElementById("arrow-right").classList.contains('disabled') ){
+                //do nothing
+            }
+            if(pageNumber!=parseInt(pageCount,10)){
+                if(pageNumber==1){
+                    openPage('second');
+                }else if(pageNumber>1){
+                    openPage('third');
+                }
+            }
+        }
+        if(arrow==='left'){
+            if ( !document.getElementById("arrow-left").classList.contains('disabled') ){
+                //do nothing
+            }
+            if(pageNumber>1){
+                if(pageNumber===parseInt(pageCount,10)){
+                    // if(pageCount==2){
+                    //     openPage('first');
+                    // }
+                    openPage('second');
+                }else{
+                    openPage('first');
+                }
+            }
+        }
+    }
+
+
+    // opens page clicked on pagination button
+    function openPage(buttonNumber){
+        let pressedButton;
+
+        //if pages>3 && pressed not last or first =change numbers on buttons
+
+        if(buttonNumber === 'first') {
+            pressedButton = document.getElementById("firstNumber");
+
+            if (pressedButton.innerText === '1') {
+                if (!document.getElementById("firstButton").classList.contains('active')) {
+                    document.getElementById("firstButton").classList.add('active');
+                    document.getElementById("secondButton").classList.remove('active');
+                    document.getElementById("thirdButton").classList.remove('active');
+                }
+                pageNumber= pressedButton.innerText;
+
+                document.getElementById("firstNumber").innerText = '1';
+                document.getElementById("secondNumber").innerText = '2';
+                document.getElementById("thirdNumber").innerText = '3';
+            } else {
+                if (!document.getElementById("secondButton").classList.contains('active')) {
+                    document.getElementById("firstButton").classList.remove('active');
+                    document.getElementById("secondButton").classList.add('active');
+                    document.getElementById("thirdButton").classList.remove('active');
+                }
+                pageNumber= pressedButton.innerText;
+
+                document.getElementById("firstNumber").innerText = (parseInt(pageNumber,10)-1).toString();
+                document.getElementById("secondNumber").innerText = pageNumber;
+                document.getElementById("thirdNumber").innerText = (parseInt(pageNumber,10)+1).toString();
+            }
+        }else if(buttonNumber === 'second'){
+            pressedButton = document.getElementById("secondNumber");
+
+            if ( !document.getElementById("secondButton").classList.contains('active') ){
+                document.getElementById("secondButton").classList.add('active');
+                document.getElementById("firstButton").classList.remove('active');
+                document.getElementById("thirdButton").classList.remove('active');
+            }
+            pageNumber= pressedButton.innerText;
+        }else if(buttonNumber === 'third') {
+            pressedButton = document.getElementById("thirdNumber");
+
+            if(pressedButton.innerText==pageCount){
+                if ( !document.getElementById("thirdButton").classList.contains('active') ){
+                    document.getElementById("thirdButton").classList.add('active');
+                    document.getElementById("firstButton").classList.remove('active');
+                    document.getElementById("secondButton").classList.remove('active');
+                }
+                pageNumber= pressedButton.innerText;
+            }else{
+                //add active css class
+                if (!document.getElementById("secondButton").classList.contains('active')) {
+                    document.getElementById("firstButton").classList.remove('active');
+                    document.getElementById("secondButton").classList.add('active');
+                    document.getElementById("thirdButton").classList.remove('active');
+                }
+                pageNumber= pressedButton.innerText;
+
+                //change numbers of buttons
+                document.getElementById("firstNumber").innerText = (parseInt(pageNumber,10)-1).toString();
+                document.getElementById("secondNumber").innerText = pageNumber;
+                document.getElementById("thirdNumber").innerText = (parseInt(pageNumber,10)+1).toString();
+            }
+        }
+
+        enableDisablePaginationArrows();
+
+
+        getJSONDataItems();  // load items from DB
+    }
+
+    function enableDisablePaginationArrows(){
+        // change pagination arrows enable/disable.
+        if(pageCount===1){
+            //disable all
+            if ( !document.getElementById("arrow-right").classList.contains('disabled') ){
+                document.getElementById("arrow-right").classList.add('disabled');
+            }
+            if ( !document.getElementById("arrow-left").classList.contains('disabled') ){
+                document.getElementById("arrow-left").classList.add('disabled');
+            }
+        }else if(pageNumber == pageCount){
+            //disable to the right
+            if ( !document.getElementById("arrow-right").classList.contains('disabled') ){
+                document.getElementById("arrow-right").classList.add('disabled');
+            }
+            if ( document.getElementById("arrow-left").classList.contains('disabled') ){
+                document.getElementById("arrow-left").classList.remove('disabled');
+            }
+        }else if(pageNumber == 1){
+            //disable to the left
+            if ( !document.getElementById("arrow-left").classList.contains('disabled') ){
+                document.getElementById("arrow-left").classList.add('disabled');
+            }
+            if ( document.getElementById("arrow-right").classList.contains('disabled') ){
+                document.getElementById("arrow-right").classList.remove('disabled');
+            }
+        }else{
+            if ( document.getElementById("arrow-right").classList.contains('disabled') ){
+                document.getElementById("arrow-right").classList.remove('disabled');
+            }
+            if ( document.getElementById("arrow-left").classList.contains('disabled') ){
+                document.getElementById("arrow-left").classList.remove('disabled');
+            }
+        }
+    }
+
+</script>
+
+</body>
+</html>
