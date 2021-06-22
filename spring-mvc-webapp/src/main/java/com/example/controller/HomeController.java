@@ -9,6 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
@@ -23,15 +24,18 @@ public class HomeController {
         this.userEntityService = userEntityService;
     }
 
-    @RequestMapping("/")
-    public String showProductListPage(Model model) {
+    @ModelAttribute //all method calls will have same model attribute
+    public void addAttributes(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String email= auth.getName(); //get logged in username
         UserEntity user=userEntityService.findUserEntityByEmail(email).orElse(null);
         if(user!=null){
             model.addAttribute("userName", user.getFirstName()+" "+user.getLastName());
         }
+    }
 
+    @RequestMapping("/")
+    public String showProductListPage(Model model) {
         model.addAttribute("genderList", itemSortingService.getGenders());
         model.addAttribute("categoryList", itemSortingService.getCategories());
         model.addAttribute("sizeList", itemSortingService.getSizes());
