@@ -54,6 +54,15 @@ public class SecurityWebAppConfiguration extends WebSecurityConfigurerAdapter {
                             .usernameParameter("username")
                             .passwordParameter("password");  //id & name in form's*/
                 })
-                .rememberMe(); //defaults to 2 weeks
+                .rememberMe() //defaults to 2 weeks
+                .and()
+                .logout(logoutConfigurer-> {
+                    logoutConfigurer
+                            .logoutUrl("/logout").permitAll()
+                            .clearAuthentication(true)
+                            .invalidateHttpSession(true)
+                            .deleteCookies("JSESSIONID", "remember-me")
+                            .logoutSuccessUrl("/login?logout");
+                });
     }
 }

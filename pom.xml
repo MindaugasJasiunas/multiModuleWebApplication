@@ -21,6 +21,7 @@
         <spring.security.version>5.5.1</spring.security.version>
         <maven.compiler.plugin.version>3.8.1</maven.compiler.plugin.version>
         <jackson.databind.version>2.11.4</jackson.databind.version>
+        <thymeleaf.extras.spring.security.version>3.0.4.RELEASE</thymeleaf.extras.spring.security.version>
     </properties>
 
     <build>
@@ -33,7 +34,7 @@
                 <configuration>
                     <target>${java.version}</target>
                     <source>${java.version}</source>
-                    <release>1${java.version}</release>
+                    <release>${java.version}</release>
                 </configuration>
             </plugin>
 
@@ -57,6 +58,12 @@
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-config</artifactId>
             <version>${spring.security.version}</version>
+        </dependency>
+        <!-- Spring Security Tag Library -->
+        <dependency>
+            <groupId>org.thymeleaf.extras</groupId>
+            <artifactId>thymeleaf-extras-springsecurity5</artifactId>
+            <version>${thymeleaf.extras.spring.security.version}</version>
         </dependency>
     </dependencies>
 

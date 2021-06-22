@@ -309,11 +309,11 @@
 
             //hide all columns before loading page(prevent same items in next page if new page is not full).
             for(let i=1; i<=8; i++) {
-                document.getElementById(i+"-item-column").style.visibility="hidden";
+                document.getElementById(i+"-item-column").style.display="none";
             }
 
             for(let i=0; i<response.length; i++) {
-                document.getElementById((i+1)+"-item-column").style.visibility="visible";
+                document.getElementById((i+1)+"-item-column").style.display="block";
 
                 document.getElementById((i+1)+"-product-title").innerHTML= response[i].title;
                 document.getElementById((i+1)+"-product-price").innerHTML= response[i].price.number+' '+response[i].price.currency.currencyCode;
