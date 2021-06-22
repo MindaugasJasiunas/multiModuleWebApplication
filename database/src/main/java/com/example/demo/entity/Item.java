@@ -53,7 +53,7 @@ public class Item {
             inverseJoinColumns = @JoinColumn(name = "size_id"))
     private Set<Size> sizeSet=new HashSet<>();
 
-    @ManyToOne(cascade= CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name="gender_id") //foreign key 'gender_id' to Item table
     private Gender gender;
 
