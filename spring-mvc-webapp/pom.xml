@@ -12,11 +12,16 @@
 
     <properties>
         <spring.version>5.3.7</spring.version>
+        <spring.security.version>5.5.1</spring.security.version>
+
         <javax.servlet.version>4.0.1</javax.servlet.version>
         <thymeleaf.version>3.0.12.RELEASE</thymeleaf.version>
         <webjars.bootstrap.version>5.0.1</webjars.bootstrap.version>
         <webjars.bootstrap.icons.version>1.5.0</webjars.bootstrap.icons.version>
         <webjars.jquery.version>3.6.0</webjars.jquery.version>
+        <webjars.jquery.ui.version>1.11.4</webjars.jquery.ui.version>
+
+        <maven.war.plugin.version>3.3.1</maven.war.plugin.version>
     </properties>
 
     <parent>
@@ -68,7 +73,7 @@
         <dependency>
             <groupId>org.webjars</groupId>
             <artifactId>jquery-ui</artifactId>
-            <version>1.11.4</version>
+            <version>${webjars.jquery.ui.version}</version>
         </dependency>
         <dependency>
             <groupId>org.webjars</groupId>
@@ -85,12 +90,12 @@
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-web</artifactId>
-            <version>5.5.1</version>
+            <version>${spring.security.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-config</artifactId>
-            <version>5.5.1</version>
+            <version>${spring.security.version}</version>
         </dependency>
 
 
@@ -108,7 +113,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
-                <version>3.3.1</version>
+                <version>${maven.war.plugin.version}</version>
                 <configuration>
                     <webResources>
                         <resource>
