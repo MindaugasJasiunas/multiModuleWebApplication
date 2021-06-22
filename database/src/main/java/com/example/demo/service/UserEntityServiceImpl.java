@@ -1,9 +1,8 @@
 package com.example.demo.service;
 
-import com.example.demo.dao.UserEntityRepository;
-import com.example.demo.entity.UserEntity;
+import com.example.demo.dao.authentication.UserEntityRepository;
+import com.example.demo.entity.authentication.UserEntity;
 import org.hibernate.exception.ConstraintViolationException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

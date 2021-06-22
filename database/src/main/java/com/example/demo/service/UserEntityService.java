@@ -1,6 +1,6 @@
 package com.example.demo.service;
 
-import com.example.demo.entity.UserEntity;
+import com.example.demo.entity.authentication.UserEntity;
 
 import java.util.List;
 import java.util.Optional;
