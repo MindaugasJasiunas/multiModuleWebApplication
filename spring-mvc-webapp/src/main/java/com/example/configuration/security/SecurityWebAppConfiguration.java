@@ -43,6 +43,17 @@ public class SecurityWebAppConfiguration extends WebSecurityConfigurerAdapter {
 
                 .anyRequest().authenticated() //should be after all matchers
                 .and()
-                .httpBasic();
+//                .httpBasic();
+                .formLogin(loginConfigurer->{               //override default '/login' page
+                    loginConfigurer
+                            .loginProcessingUrl("/login")    //login processing URL
+                            .loginPage("/login").permitAll() //login form URL
+                            .successForwardUrl("/")          //redirected after success login to
+                            .defaultSuccessUrl("/")          //URL added when login succeeded (can be "?success")
+                            .failureUrl("/login?error")      //redirected when login fails
+                            .usernameParameter("username")
+                            .passwordParameter("password");  //id & name in form's*/
+                })
+                .rememberMe(); //defaults to 2 weeks
     }
 }
