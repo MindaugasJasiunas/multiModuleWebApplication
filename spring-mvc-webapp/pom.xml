@@ -12,7 +12,6 @@
 
     <properties>
         <spring.version>5.3.7</spring.version>
-        <spring.security.version>5.5.1</spring.security.version>
 
         <javax.servlet.version>4.0.1</javax.servlet.version>
         <thymeleaf.version>3.0.12.RELEASE</thymeleaf.version>
@@ -85,20 +84,6 @@
             <artifactId>bootstrap-icons</artifactId>
             <version>${webjars.bootstrap.icons.version}</version>
         </dependency>
-
-        <!-- Spring Security -->
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-web</artifactId>
-            <version>${spring.security.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-config</artifactId>
-            <version>${spring.security.version}</version>
-        </dependency>
-
-
 
         <!-- Hibernate Validator -->
 <!--        <dependency>-->
