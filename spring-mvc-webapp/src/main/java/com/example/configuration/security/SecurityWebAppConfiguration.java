@@ -8,16 +8,19 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityWebAppConfiguration extends WebSecurityConfigurerAdapter {
-    private JpaUserDetailsService jpaUserDetailsService;
-    private PasswordEncoder passwordEncoder;
+    private final JpaUserDetailsService jpaUserDetailsService;
+    private final PasswordEncoder passwordEncoder;
+    private final PersistentTokenRepository persistentTokenRepository;
 
-    public SecurityWebAppConfiguration(JpaUserDetailsService jpaUserDetailsService, PasswordEncoder passwordEncoder) {
+    public SecurityWebAppConfiguration(JpaUserDetailsService jpaUserDetailsService, PasswordEncoder passwordEncoder, PersistentTokenRepository persistentTokenRepository) {
         this.jpaUserDetailsService = jpaUserDetailsService;
         this.passwordEncoder = passwordEncoder;
+        this.persistentTokenRepository = persistentTokenRepository;
     }
 
     @Override
@@ -54,7 +57,9 @@ public class SecurityWebAppConfiguration extends WebSecurityConfigurerAdapter {
                             .usernameParameter("username")
                             .passwordParameter("password");  //id & name in form's*/
                 })
-                .rememberMe() //defaults to 2 weeks
+                .rememberMe() // When logged with remember-me - new entry persisted to DB
+                    .tokenRepository(persistentTokenRepository)
+                    .userDetailsService(jpaUserDetailsService)
                 .and()
                 .logout(logoutConfigurer-> {
                     logoutConfigurer
