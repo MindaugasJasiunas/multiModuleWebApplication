@@ -6,7 +6,9 @@ import com.example.demo.service.ItemSortingService;
 import com.example.demo.service.UserEntityService;
 import com.example.demo.service.authentication.JpaUserDetailsService;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -54,7 +56,14 @@ public class HomeController {
     }
 
     @RequestMapping("/cart")
-    public String showShoppingCartPage(){
+    public String showShoppingCartPage(@AuthenticationPrincipal UserEntity user, Model model){
+        if(userEntityService.findUserEntityByEmail(user.getUsername()).isPresent()){
+            UserEntity userEntity= userEntityService.findUserEntityByEmail(user.getUsername()).get();
+            //TODO: implement functionality & load cart by user
+        }else{
+            return "redirect:/";
+        }
+        //load items to shopping cart by user
         return "cart";
     }
 
@@ -62,22 +71,6 @@ public class HomeController {
     public String showAdminPage(){
         return "admin";
     }
-
-    @RequestMapping("/register")
-    public String showRegisterPage(){
-        return "register";
-    }
-
-    @RequestMapping("/login")
-    public String showLoginPage(){
-        return "login";
-    }
-
-    @RequestMapping("/forgot")
-    public String showForgotPasswordPage(){
-        return "forgot-password";
-    }
-
 
 }
 

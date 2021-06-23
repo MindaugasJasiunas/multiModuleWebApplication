@@ -7,7 +7,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.util.Collection;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -28,12 +30,20 @@ public class UserEntity implements UserDetails, CredentialsContainer {
     @Column(name = "public_id", unique = true)
     @Builder.Default
     private UUID publicId= UUID.randomUUID();
+    @NotNull(message = "First name can't be empty")
+    @Size(min = 2, message = "First name is required")
     @Column(name = "first_name")
     private String firstName;
+    @NotNull(message = "Last name can't be empty")
+    @Size(min = 2, message = "Last name is required")
     @Column(name = "last_name")
     private String lastName;
+    @NotNull(message = "Password is required")
+    @Size(min = 8, message = "Password must be longer than 8 characters")
     @Column(name = "encrypted_password")
     private String encryptedPassword;
+    @NotNull(message = "Email is required")
+    @Pattern(regexp = "(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])", message = "Check email format.")
     @Column(name = "email", unique = true)
     private String email;
     @Builder.Default

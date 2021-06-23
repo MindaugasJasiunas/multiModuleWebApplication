@@ -13,41 +13,65 @@
                         <div class="card shadow-lg border-0 rounded-lg mt-5">
                             <div class="card-header"><h3 class="text-center font-weight-light my-4">Create Account</h3></div>
                             <div class="card-body">
-                                <form>
+                                <form th:action="@{/register}" th:method="POST" th:object="${user}">
                                     <div class="row mb-3">
                                         <div class="col-md-6">
+                                            <div class="alert alert-danger" role="alert" th:if="${#fields.hasErrors('firstName')}">
+                                                <ul>
+                                                    <li th:each="err:${#fields.errors('firstName')}" th:text="${err}"></li>
+                                                </ul>
+                                            </div>
                                             <div class="form-floating mb-3 mb-md-0">
-                                                <input class="form-control" id="inputFirstName" type="text" placeholder="Enter your first name">
+                                                <input class="form-control" id="inputFirstName" type="text" placeholder="Enter your first name" th:field="${user.firstName}">
                                                 <label for="inputFirstName">First name</label>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
+                                            <div class="alert alert-danger" role="alert" th:if="${#fields.hasErrors('lastName')}">
+                                                <ul>
+                                                    <li th:each="err:${#fields.errors('lastName')}" th:text="${err}"></li>
+                                                </ul>
+                                            </div>
                                             <div class="form-floating">
-                                                <input class="form-control" id="inputLastName" type="text" placeholder="Enter your last name">
+                                                <input class="form-control" id="inputLastName" type="text" placeholder="Enter your last name" th:field="${user.lastName}">
                                                 <label for="inputLastName">Last name</label>
                                             </div>
                                         </div>
                                     </div>
+
+                                    <div class="alert alert-danger" role="alert" th:if="${#fields.hasErrors('email')}">
+                                        <ul>
+                                            <li th:each="err:${#fields.errors('email')}" th:text="${err}"></li>
+                                        </ul>
+                                    </div>
                                     <div class="form-floating mb-3">
-                                        <input class="form-control" id="inputEmail" type="email" placeholder="name@example.com">
+                                        <input class="form-control" id="inputEmail" type="email" placeholder="name@example.com" th:field="${user.email}">
                                         <label for="inputEmail">Email address</label>
+                                    </div>
+
+                                    <div class="alert alert-danger" role="alert" th:if="${#fields.hasErrors('encryptedPassword')}">
+                                        <ul>
+                                            <li th:each="err:${#fields.errors('encryptedPassword')}" th:text="${err}"></li>
+                                        </ul>
                                     </div>
                                     <div class="row mb-3">
                                         <div class="col-md-6">
                                             <div class="form-floating mb-3 mb-md-0">
-                                                <input class="form-control" id="inputPassword" type="password" placeholder="Create a password">
+                                                <input class="form-control" id="inputPassword" name="inputPassword" type="password" placeholder="Create a password" th:field="${user.encryptedPassword}">
                                                 <label for="inputPassword">Password</label>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-floating mb-3 mb-md-0">
-                                                <input class="form-control" id="inputPasswordConfirm" type="password" placeholder="Confirm password">
+                                                <input class="form-control" id="inputPasswordConfirm" name="inputPasswordConfirm" type="password" placeholder="Confirm password">
                                                 <label for="inputPasswordConfirm">Confirm Password</label>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="mt-4 mb-0">
-                                        <div class="d-grid"><a class="btn btn-primary btn-block" href="login.html">Create Account</a></div>
+                                        <div class="d-grid">
+                                            <input class="btn btn-primary btn-block" type="submit" value="Create Account" >
+                                        </div>
                                     </div>
                                 </form>
                             </div>

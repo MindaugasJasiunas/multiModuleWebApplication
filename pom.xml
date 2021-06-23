@@ -22,6 +22,7 @@
         <maven.compiler.plugin.version>3.8.1</maven.compiler.plugin.version>
         <jackson.databind.version>2.11.4</jackson.databind.version>
         <thymeleaf.extras.spring.security.version>3.0.4.RELEASE</thymeleaf.extras.spring.security.version>
+        <hibernate.validator.version>6.2.0.Final</hibernate.validator.version>
     </properties>
 
     <build>
@@ -64,6 +65,12 @@
             <groupId>org.thymeleaf.extras</groupId>
             <artifactId>thymeleaf-extras-springsecurity5</artifactId>
             <version>${thymeleaf.extras.spring.security.version}</version>
+        </dependency>
+        <!-- Hibernate Validator -->
+        <dependency>
+            <groupId>org.hibernate.validator</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <version>${hibernate.validator.version}</version>
         </dependency>
     </dependencies>
 

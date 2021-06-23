@@ -84,13 +84,6 @@
             <artifactId>bootstrap-icons</artifactId>
             <version>${webjars.bootstrap.icons.version}</version>
         </dependency>
-
-        <!-- Hibernate Validator -->
-<!--        <dependency>-->
-<!--            <groupId>org.hibernate.validator</groupId>-->
-<!--            <artifactId>hibernate-validator</artifactId>-->
-<!--            <version>6.1.5.Final</version>-->
-<!--        </dependency>-->
     </dependencies>
 
     <build>

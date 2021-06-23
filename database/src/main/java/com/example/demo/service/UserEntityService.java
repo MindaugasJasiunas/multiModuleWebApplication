@@ -12,6 +12,6 @@ public interface UserEntityService {
     Optional<UserEntity> findUserEntityByEmail(String email);
     Optional<UserEntity> findUserEntityByPublicId(UUID publicId);
     void deleteUserEntityByPublicId(UUID publicId);
-
+    boolean emailAlreadyExistsInDB(String email);
 
 }

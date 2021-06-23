@@ -19,6 +19,11 @@ public class UserEntityServiceImpl implements UserEntityService{
 
     @Override
     public Optional<UserEntity> saveOrUpdate(UserEntity user){
+        if(user.getId()==null || user.getId()<1){
+            //new user - save disabled
+            user.setEnabled(false);
+            //generate email verification token, save & sent email with link
+        }
         Optional<UserEntity> userSavedInDB=Optional.empty();
         try{
             UserEntity saved= userEntityRepo.save(user);
@@ -49,5 +54,15 @@ public class UserEntityServiceImpl implements UserEntityService{
         userEntityRepo.deleteUserEntityByPublicId(publicId);
     }
 
+
+    @Override
+    public boolean emailAlreadyExistsInDB(String email){
+        Optional<UserEntity> userFromDB= userEntityRepo.findUserEntityByEmail(email);
+        if(userFromDB.isPresent()){
+            return true;
+        }else{
+            return false;
+        }
+    }
 
 }
