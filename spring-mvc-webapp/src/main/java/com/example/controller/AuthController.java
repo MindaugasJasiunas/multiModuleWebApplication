@@ -58,9 +58,6 @@ public class AuthController {
                 br.rejectValue("encryptedPassword", "error.user", "Passwords doesn't match.");
             }
         }
-        if(userEntityService.emailAlreadyExistsInDB(user.getEmail())){
-            br.rejectValue("email", "error.user", "User with this email already exists.");
-        }
 
         if(br.hasErrors()) {
 //            br.getAllErrors().forEach(e -> System.out.println(e.toString()));
