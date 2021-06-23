@@ -23,6 +23,8 @@
         <jackson.databind.version>2.11.4</jackson.databind.version>
         <thymeleaf.extras.spring.security.version>3.0.4.RELEASE</thymeleaf.extras.spring.security.version>
         <hibernate.validator.version>6.2.0.Final</hibernate.validator.version>
+
+        <thymeleaf.version>3.0.12.RELEASE</thymeleaf.version>
     </properties>
 
     <build>
@@ -71,6 +73,18 @@
             <groupId>org.hibernate.validator</groupId>
             <artifactId>hibernate-validator</artifactId>
             <version>${hibernate.validator.version}</version>
+        </dependency>
+
+        <!-- Thymeleaf dependency(used for both - web-app module for view, database for email template) -->
+        <dependency>
+            <groupId>org.thymeleaf</groupId>
+            <artifactId>thymeleaf</artifactId>
+            <version>${thymeleaf.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.thymeleaf</groupId>
+            <artifactId>thymeleaf-spring5</artifactId>
+            <version>${thymeleaf.version}</version>
         </dependency>
     </dependencies>
 
