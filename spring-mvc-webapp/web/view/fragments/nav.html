@@ -34,7 +34,7 @@
                             <a class="nav-link" th:text="${userName != null} ? 'Hello '+${userName}"></a>
                         </li>
                     </ul>
-                    <form class="d-flex">
+                    <form class="d-flex" sec:authorize="isAuthenticated() && hasRole('CUSTOMER')">
                         <button class="btn btn-outline-dark" type="submit">
                             <i class="bi-cart-fill me-1"></i>
                             Cart
