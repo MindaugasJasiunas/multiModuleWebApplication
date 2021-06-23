@@ -12,5 +12,7 @@ public interface UserEntityService {
     Optional<UserEntity> findUserEntityByEmail(String email);
     Optional<UserEntity> findUserEntityByPublicId(UUID publicId);
     void deleteUserEntityByPublicId(UUID publicId);
+    boolean makeUserDisabledByEmail(String email);
+    boolean makeUserEnabledByEmail(String email);
 
 }

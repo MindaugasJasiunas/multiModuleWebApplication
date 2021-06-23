@@ -38,6 +38,7 @@ public class SecurityWebAppConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/login").permitAll()
                 .antMatchers("/register").permitAll()
                 .antMatchers("/forgot").permitAll()
+                .antMatchers("/verify/**").permitAll()  // link to confirm email/change password
 
                 .antMatchers("/cart").hasRole("CUSTOMER")
                 .antMatchers("/checkout").hasRole("CUSTOMER")

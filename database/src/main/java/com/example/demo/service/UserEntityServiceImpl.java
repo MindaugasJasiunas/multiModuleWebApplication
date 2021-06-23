@@ -23,6 +23,7 @@ public class UserEntityServiceImpl implements UserEntityService{
             //new user - save disabled
             user.setEnabled(false);
             //generate email verification token, save & sent email with link
+
         }
         Optional<UserEntity> userSavedInDB=Optional.empty();
         try{
@@ -52,6 +53,31 @@ public class UserEntityServiceImpl implements UserEntityService{
     @Override
     public void deleteUserEntityByPublicId(UUID publicId){
         userEntityRepo.deleteUserEntityByPublicId(publicId);
+    }
+
+
+    @Override
+    public boolean makeUserDisabledByEmail(String email){
+        if(userEntityRepo.findUserEntityByEmail(email).isPresent()){
+            UserEntity user=userEntityRepo.findUserEntityByEmail(email).get();
+            user.setEnabled(false);
+            userEntityRepo.save(user);
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    @Override
+    public boolean makeUserEnabledByEmail(String email){
+        if(userEntityRepo.findUserEntityByEmail(email).isPresent()){
+            UserEntity user=userEntityRepo.findUserEntityByEmail(email).get();
+            user.setEnabled(true);
+            userEntityRepo.save(user);
+            return true;
+        }else{
+            return false;
+        }
     }
 
 }
