@@ -12,7 +12,6 @@ public class UniqueEmailConstraintValidator implements ConstraintValidator<Uniqu
 
     @Override
     public boolean isValid(String email, ConstraintValidatorContext context){
-        System.out.println("IS NOT NULL? : "+ (service!=null));
         return service.findUserEntityByEmail(email).isEmpty();
     }
 
