@@ -35,11 +35,11 @@ public class SecurityWebAppConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/resources/**", "/webjars/**").permitAll()
                 .antMatchers("/api/v1/items").permitAll()  // REST endpoint call in main page for items
                 .antMatchers("/item/**").permitAll()
-                .antMatchers("/cart").permitAll()
                 .antMatchers("/login").permitAll()
                 .antMatchers("/register").permitAll()
                 .antMatchers("/forgot").permitAll()
 
+                .antMatchers("/cart").hasRole("CUSTOMER")
                 .antMatchers("/checkout").hasRole("CUSTOMER")
 
                 .antMatchers("/admin/**").hasRole("ADMIN")
