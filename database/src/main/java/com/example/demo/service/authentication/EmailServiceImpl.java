@@ -58,7 +58,6 @@ public class EmailServiceImpl implements EmailService{
 
     @Override
     public void sendVerificationEmail(String email, boolean resetPassword){
-        System.out.println("sendVerificationEmail("+email+","+resetPassword+")");
         //make DB entry
         UserEntity userEntity= userEntityService.findUserEntityByEmail(email).get();
         AccountVerification verification=new AccountVerification(userEntity.getPublicId(), resetPassword);
