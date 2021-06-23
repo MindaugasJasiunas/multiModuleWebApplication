@@ -54,15 +54,4 @@ public class UserEntityServiceImpl implements UserEntityService{
         userEntityRepo.deleteUserEntityByPublicId(publicId);
     }
 
-
-    @Override
-    public boolean emailAlreadyExistsInDB(String email){
-        Optional<UserEntity> userFromDB= userEntityRepo.findUserEntityByEmail(email);
-        if(userFromDB.isPresent()){
-            return true;
-        }else{
-            return false;
-        }
-    }
-
 }
