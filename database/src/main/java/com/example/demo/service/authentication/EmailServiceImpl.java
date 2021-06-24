@@ -28,8 +28,8 @@ import java.util.UUID;
 public class EmailServiceImpl implements EmailService{
     private final AccountVerificationRepository accountVerificationRepo;
     private final UserEntityService userEntityService;
-    private JavaMailSender emailSender;
-    private SpringTemplateEngine thymeleafTemplateEngine;
+    private final JavaMailSender emailSender;
+    private final SpringTemplateEngine thymeleafTemplateEngine;
 
     @Value("${mail.template}")
     private String mailTemplate;
@@ -73,6 +73,9 @@ public class EmailServiceImpl implements EmailService{
 
     @Override
     public void sendVerificationEmail(String email, boolean resetPassword){
+        if(userEntityService.findUserEntityByEmail(email).isEmpty()){
+            return;
+        }
         //make DB entry
         UserEntity userEntity= userEntityService.findUserEntityByEmail(email).get();
         AccountVerification verification=new AccountVerification(userEntity.getPublicId(), resetPassword);

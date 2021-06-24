@@ -10,9 +10,9 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ItemSortingServiceImpl implements ItemSortingService{
-    private CategoryRepository categoryRepository;
-    private GenderRepository genderRepository;
-    private SizeRepository sizeRepository;
+    private final CategoryRepository categoryRepository;
+    private final GenderRepository genderRepository;
+    private final SizeRepository sizeRepository;
 
     public ItemSortingServiceImpl(CategoryRepository categoryRepository, GenderRepository genderRepository, SizeRepository sizeRepository) {
         this.categoryRepository = categoryRepository;

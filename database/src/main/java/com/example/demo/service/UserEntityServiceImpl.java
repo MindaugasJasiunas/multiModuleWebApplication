@@ -11,7 +11,7 @@ import java.util.UUID;
 
 @Service
 public class UserEntityServiceImpl implements UserEntityService{
-    private UserEntityRepository userEntityRepo;
+    private final UserEntityRepository userEntityRepo;
 
     public UserEntityServiceImpl(UserEntityRepository userEntityRepo) {
         this.userEntityRepo = userEntityRepo;
@@ -22,8 +22,6 @@ public class UserEntityServiceImpl implements UserEntityService{
         if(user.getId()==null || user.getId()<1){
             //new user - save disabled
             user.setEnabled(false);
-            //generate email verification token, save & sent email with link
-
         }
         Optional<UserEntity> userSavedInDB=Optional.empty();
         try{
