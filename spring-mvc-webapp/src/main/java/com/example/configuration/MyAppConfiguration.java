@@ -8,10 +8,16 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Description;
+import org.springframework.context.support.ResourceBundleMessageSource;
+import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.i18n.CookieLocaleResolver;
+import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
+import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.thymeleaf.extras.springsecurity5.dialect.SpringSecurityDialect;
 import org.thymeleaf.spring5.SpringTemplateEngine;
@@ -21,6 +27,7 @@ import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
 import javax.servlet.ServletContext;
+import java.util.Locale;
 
 @Configuration
 @ComponentScan(basePackages = "com.example")
@@ -66,6 +73,8 @@ public class MyAppConfiguration implements WebMvcConfigurer, ApplicationContextA
 
         templateEngine.addDialect(new SpringSecurityDialect());
 
+        templateEngine.setTemplateEngineMessageSource(messageSource());
+
         return templateEngine;
     }
 
@@ -82,6 +91,34 @@ public class MyAppConfiguration implements WebMvcConfigurer, ApplicationContextA
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/resources/**").addResourceLocations("/resources/");
         registry.addResourceHandler("/webjars/**").addResourceLocations("/webjars/");
+    }
+
+
+    @Bean("messageSource")
+    public ResourceBundleMessageSource messageSource() {
+        var source = new ResourceBundleMessageSource();
+        source.setBasenames("messages/messages");  // folder/names
+        source.setUseCodeAsDefaultMessage(true);
+        return source;
+    }
+
+
+    // helps to identify which locale is being used.
+    @Bean
+    public LocaleResolver localeResolver() {
+        SessionLocaleResolver slr = new SessionLocaleResolver();
+//        CookieLocaleResolver slr= new CookieLocaleResolver();
+        slr.setDefaultLocale(Locale.US);
+        return slr;
+    }
+
+
+    // allow specifying the desired locale on every request.
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        LocaleChangeInterceptor localeChangeInterceptor = new LocaleChangeInterceptor();
+        localeChangeInterceptor.setParamName("lang");  // ?lang=en
+        registry.addInterceptor(localeChangeInterceptor);
     }
 
 
