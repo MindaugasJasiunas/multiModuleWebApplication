@@ -6,6 +6,8 @@ import com.example.demo.entity.authentication.UserEntity;
 import com.example.demo.service.UserEntityService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -21,12 +23,22 @@ import java.util.UUID;
 
 @Slf4j
 
+@PropertySource("classpath:mail.properties")
 @Service
 public class EmailServiceImpl implements EmailService{
     private final AccountVerificationRepository accountVerificationRepo;
     private final UserEntityService userEntityService;
     private JavaMailSender emailSender;
     private SpringTemplateEngine thymeleafTemplateEngine;
+
+    @Value("${mail.template}")
+    private String mailTemplate;
+    @Value("${mail.title}")
+    private String mailTitle;
+    @Value("${mail.sender}")
+    private String mailSender;
+    @Value("${mail.baselink}")
+    private String mailBaseLink;
 
     public EmailServiceImpl(AccountVerificationRepository accountVerificationRepo, UserEntityService userEntityService, JavaMailSender emailSender, SpringTemplateEngine thymeleafTemplateEngine) {
         this.accountVerificationRepo = accountVerificationRepo;
@@ -75,8 +87,8 @@ public class EmailServiceImpl implements EmailService{
         }
         try{
             Map<String, Object> arguments=new HashMap<>();
-            arguments.put("link","http://localhost:8080/spring_mvc_webapp_war_exploded/verify/"+verification.getVerificationCode());
-            sendMessageUsingThymeleafTemplate(email, "Email verification letter", arguments);
+            arguments.put("link", mailBaseLink + verification.getVerificationCode());
+            sendMessageUsingThymeleafTemplate(email, mailTitle, arguments);
         }catch (MessagingException e){
             log.error("Error when sending email: "+e.getMessage());
         }
@@ -87,7 +99,7 @@ public class EmailServiceImpl implements EmailService{
     private void sendMessageUsingThymeleafTemplate(String to, String subject, Map< String, Object> arguments) throws MessagingException {
         Context ctx= new Context();   // import org.thymeleaf.Context
         ctx.setVariables(arguments);
-        String htmlBody= thymeleafTemplateEngine.process("emails/passwordVerificationEmailForm.html", ctx);
+        String htmlBody= thymeleafTemplateEngine.process(mailTemplate, ctx);
         sendHtmlMessage(to, subject, htmlBody);
     }
 
@@ -95,7 +107,7 @@ public class EmailServiceImpl implements EmailService{
         MimeMessage msg= emailSender.createMimeMessage();
 
         MimeMessageHelper helper= new MimeMessageHelper(msg, true); //'true'- multipart
-        helper.setFrom("noreply@example.com");
+        helper.setFrom(mailSender);
         helper.setTo(to);
         helper.setSubject(subject);
         helper.setText(htmlBody, true);  // 'true'- HTML content type
