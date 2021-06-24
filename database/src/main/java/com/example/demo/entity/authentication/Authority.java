@@ -14,7 +14,9 @@ import java.util.Set;
 @Entity
 public class Authority {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @SequenceGenerator( name = "authority_sequence", sequenceName = "authority_sequence", allocationSize = 1)
+    @GeneratedValue( strategy = GenerationType.SEQUENCE, generator = "authority_sequence")
+    @Column(name = "id", unique = true)
     private Long id;
     private String permission;
     @ManyToMany(mappedBy = "authorities")

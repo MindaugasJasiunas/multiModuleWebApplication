@@ -13,7 +13,9 @@ import java.util.UUID;
 @Entity
 public class AccountVerification {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @SequenceGenerator( name = "account_verification_sequence", sequenceName = "account_verification_sequence", allocationSize = 1)
+    @GeneratedValue( strategy = GenerationType.SEQUENCE, generator = "account_verification_sequence")
+    @Column(name = "id", unique = true)
     private long id;
     @Column(name = "user_entity_public_id",unique = true)
     private UUID userEntityPublicId;

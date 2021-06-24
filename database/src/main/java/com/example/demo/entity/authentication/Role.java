@@ -14,7 +14,9 @@ import java.util.Set;
 @Entity
 public class Role {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @SequenceGenerator( name = "role_sequence", sequenceName = "role_sequence", allocationSize = 1)
+    @GeneratedValue( strategy = GenerationType.SEQUENCE, generator = "role_sequence")
+    @Column(name = "id", unique = true)
     private Long id;
     @Column(name = "role_name", unique = true)
     private String roleName;
