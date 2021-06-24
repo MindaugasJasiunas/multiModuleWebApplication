@@ -4,6 +4,7 @@ import com.example.demo.dao.authentication.AccountVerificationRepository;
 import com.example.demo.entity.authentication.AccountVerification;
 import com.example.demo.entity.authentication.UserEntity;
 import com.example.demo.service.UserEntityService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -17,6 +18,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+
+@Slf4j
 
 @Service
 public class EmailServiceImpl implements EmailService{
@@ -62,16 +65,21 @@ public class EmailServiceImpl implements EmailService{
         UserEntity userEntity= userEntityService.findUserEntityByEmail(email).get();
         AccountVerification verification=new AccountVerification(userEntity.getPublicId(), resetPassword);
         if(!isAlreadyAccountVerificationByUserEmail(email)){
+            //if not already in DB- create new
             verification= accountVerificationRepo.save(verification);
+        }else if(isAlreadyAccountVerificationByUserEmail(email)){
+            //update DB row & send email again
+            AccountVerification alreadyInDB= accountVerificationRepo.findAccountVerificationByUserEntityPublicId(userEntity.getPublicId()).get();
+            alreadyInDB.setVerificationCode(verification.getVerificationCode());
+            accountVerificationRepo.save(alreadyInDB);
         }
         try{
             Map<String, Object> arguments=new HashMap<>();
             arguments.put("link","http://localhost:8080/spring_mvc_webapp_war_exploded/verify/"+verification.getVerificationCode());
             sendMessageUsingThymeleafTemplate(email, "Email verification letter", arguments);
         }catch (MessagingException e){
-
+            log.error("Error when sending email: "+e.getMessage());
         }
-        // send email with code & link
     }
 
 

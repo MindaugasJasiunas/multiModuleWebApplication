@@ -54,6 +54,10 @@ public class AuthController {
                     emailService.sendVerificationEmail(email, true);
                     return "redirect:/?successRegistration";
                 }
+            }else if(emailService.isAlreadyAccountVerificationByUserEmail(email)){
+                //send once again
+                emailService.sendVerificationEmail(email, true);
+                return "redirect:/?successRegistration";
             }
         }
         return "redirect:/forgot?error";
