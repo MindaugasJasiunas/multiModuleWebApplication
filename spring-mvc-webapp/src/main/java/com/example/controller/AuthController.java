@@ -19,12 +19,10 @@ import java.util.*;
 
 @Controller
 public class AuthController {
-    private final PasswordEncoder passwordEncoder;
     private final UserEntityService userEntityService;
     private final EmailService emailService;
 
-    public AuthController(PasswordEncoder passwordEncoder, UserEntityService userEntityService, EmailService emailService) {
-        this.passwordEncoder = passwordEncoder;
+    public AuthController(UserEntityService userEntityService, EmailService emailService) {
         this.userEntityService = userEntityService;
         this.emailService = emailService;
     }
@@ -85,14 +83,7 @@ public class AuthController {
 //            br.getAllErrors().forEach(e -> System.out.println(e.toString()));
             return "register";
         }else{
-            user.setEncryptedPassword(passwordEncoder.encode(user.getEncryptedPassword()));
-
-            Role employeeRole= userEntityService.getRoleByName("CUSTOMER");
-            if(employeeRole!=null){
-                user.setRoles(Set.of(employeeRole)); // add customer role to user
-            }
-
-            Optional<UserEntity> userSaved= userEntityService.saveOrUpdate(user);
+            Optional<UserEntity> userSaved= userEntityService.saveOrUpdate(user, true);
             emailService.sendVerificationEmail(userSaved.get().getEmail(), false);
 
             return "redirect:/?successRegistration";
@@ -143,8 +134,8 @@ public class AuthController {
                 if(userEntityService.findUserEntityByPublicId(verification.getUserEntityPublicId()).isPresent()){
                     UserEntity userEntity= userEntityService.findUserEntityByPublicId(verification.getUserEntityPublicId()).get();
                     //save new password in
-                    userEntity.setEncryptedPassword(passwordEncoder.encode(passwordReset.getPassword()));
-                    userEntityService.saveOrUpdate(userEntity);
+                    userEntity.setEncryptedPassword(passwordReset.getPassword());
+                    userEntityService.saveOrUpdate(userEntity, true);
 
                     //enable user
                     userEntityService.makeUserEnabledByEmail(userEntity.getEmail());

@@ -5,29 +5,40 @@ import com.example.demo.dao.authentication.UserEntityRepository;
 import com.example.demo.entity.authentication.Role;
 import com.example.demo.entity.authentication.UserEntity;
 import org.hibernate.exception.ConstraintViolationException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 @Service
 public class UserEntityServiceImpl implements UserEntityService{
     private final UserEntityRepository userEntityRepo;
     private final RoleRepository roleRepo;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserEntityServiceImpl(UserEntityRepository userEntityRepo, RoleRepository roleRepo) {
+    public UserEntityServiceImpl(UserEntityRepository userEntityRepo, RoleRepository roleRepo, PasswordEncoder passwordEncoder) {
         this.userEntityRepo = userEntityRepo;
         this.roleRepo = roleRepo;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
     public Optional<UserEntity> saveOrUpdate(UserEntity user){
         if(user.getId()==null || user.getId()<1){
-            //new user - save disabled
+            //new user - set disabled
             user.setEnabled(false);
+            //add role
+            if(roleRepo.findRoleByRoleName("CUSTOMER").isPresent()){
+                Role customerRole= roleRepo.findRoleByRoleName("CUSTOMER").get();
+                user.setRoles(Set.of(customerRole)); // add customer role to user
+            }
         }
         Optional<UserEntity> userSavedInDB=Optional.empty();
+
+
         try{
             UserEntity saved= userEntityRepo.save(user);
             userSavedInDB= Optional.of(saved);
@@ -35,6 +46,13 @@ public class UserEntityServiceImpl implements UserEntityService{
             //email already exists in DB
         }
         return userSavedInDB;
+    }
+
+
+    @Override
+    public Optional<UserEntity> saveOrUpdate(UserEntity user, boolean newPassword){
+        user.setEncryptedPassword(passwordEncoder.encode(user.getEncryptedPassword()));
+        return saveOrUpdate(user);
     }
 
     @Override
@@ -82,14 +100,5 @@ public class UserEntityServiceImpl implements UserEntityService{
         }
     }
 
-
-    @Override
-    public Role getRoleByName(String roleName){
-        if(roleRepo.findRoleByRoleName(roleName).isPresent()){
-            return roleRepo.findRoleByRoleName(roleName).get();
-        }else{
-            return null;
-        }
-    }
 
 }
