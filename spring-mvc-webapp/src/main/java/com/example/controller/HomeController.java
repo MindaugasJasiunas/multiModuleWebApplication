@@ -16,9 +16,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 public class HomeController {
-    private ItemService itemService;
-    private ItemSortingService itemSortingService;
-    private UserEntityService userEntityService;
+    private final ItemService itemService;
+    private final ItemSortingService itemSortingService;
+    private final UserEntityService userEntityService;
 
     public HomeController(ItemService itemService, ItemSortingService itemSortingService, UserEntityService userEntityService) {
         this.itemService = itemService;
