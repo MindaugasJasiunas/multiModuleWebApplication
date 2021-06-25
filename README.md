@@ -1,7 +1,7 @@
 # E-shop example project
 
 This project is an example created using various java tools and libraries.
-This project is incomplete but working.
+This project is **not yet completed** but working.
 
 ## Description
 
