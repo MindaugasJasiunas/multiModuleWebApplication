@@ -19,17 +19,5 @@ public class Gender {
     @Column(name = "gender", unique = true, nullable = false)
     private String gender;
 
-    @JsonIgnore
-    @OneToMany(mappedBy="gender") //field name in Course class
-    private List<Item> items;
-
-    //convenience method
-    public void addItem(Item item){
-        if(items==null){
-            items=new ArrayList<>();
-        }
-        items.add(item);
-    }
-
     //male, female, unisex
 }
