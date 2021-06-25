@@ -17,4 +17,5 @@ public interface ItemService {
     Optional<Item> findItemByPublicId(UUID publicId);
     long pageCount(int itemsPerPage);
     List<Item> getItemsForRelatedProducts(int howMany);
+    Store getWarehouse();
 }

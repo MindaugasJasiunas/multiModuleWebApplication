@@ -6,6 +6,7 @@ import com.example.demo.dao.StoreRepository;
 import com.example.demo.entity.Item;
 import com.example.demo.entity.Store;
 import com.example.demo.entity.StoreItem;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -13,6 +14,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+
+@Slf4j
 
 @Service
 public class ItemServiceImpl implements ItemService{
@@ -43,6 +46,7 @@ public class ItemServiceImpl implements ItemService{
         }
         return leftInWarehouse;
     }
+
 
     @Override
     public Map<Store, Integer> getMapWithStoresAndQuantitiesForItem(Item item) {
@@ -79,6 +83,16 @@ public class ItemServiceImpl implements ItemService{
             itemsRandomized.add(items.get(new Random().nextInt(count)));
         }
         return itemsRandomized;
+    }
+
+
+    @Override
+    public Store getWarehouse(){
+        if(storeRepository.getStoreByStoreTitle("Warehouse").isPresent()) {
+            return storeRepository.getStoreByStoreTitle("Warehouse").get();
+        }
+        log.error("Warehouse not found!");
+        return null;
     }
 
 
