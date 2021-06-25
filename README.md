@@ -36,6 +36,7 @@ Java Mail is used when sending emails for password reset & new registration conf
 
 Internationalization(I18N) configured and used in main page.
 
+##Database tables UML Diagram
 ![UML DB tables diagram](https://raw.githubusercontent.com/MindaugasJasiunas/multiModuleWebApplication/MindaugasJ/tables_UML.png)
 
 ## Not implemented yet
