@@ -1,6 +1,8 @@
 package com.example.demo.service;
 
+import com.example.demo.dao.authentication.RoleRepository;
 import com.example.demo.dao.authentication.UserEntityRepository;
+import com.example.demo.entity.authentication.Role;
 import com.example.demo.entity.authentication.UserEntity;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.stereotype.Service;
@@ -12,9 +14,11 @@ import java.util.UUID;
 @Service
 public class UserEntityServiceImpl implements UserEntityService{
     private final UserEntityRepository userEntityRepo;
+    private final RoleRepository roleRepo;
 
-    public UserEntityServiceImpl(UserEntityRepository userEntityRepo) {
+    public UserEntityServiceImpl(UserEntityRepository userEntityRepo, RoleRepository roleRepo) {
         this.userEntityRepo = userEntityRepo;
+        this.roleRepo = roleRepo;
     }
 
     @Override
@@ -75,6 +79,16 @@ public class UserEntityServiceImpl implements UserEntityService{
             return true;
         }else{
             return false;
+        }
+    }
+
+
+    @Override
+    public Role getRoleByName(String roleName){
+        if(roleRepo.findRoleByRoleName(roleName).isPresent()){
+            return roleRepo.findRoleByRoleName(roleName).get();
+        }else{
+            return null;
         }
     }
 

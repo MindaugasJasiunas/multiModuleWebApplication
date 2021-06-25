@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.entity.authentication.Role;
 import com.example.demo.entity.authentication.UserEntity;
 
 import java.util.List;
@@ -14,5 +15,6 @@ public interface UserEntityService {
     void deleteUserEntityByPublicId(UUID publicId);
     boolean makeUserDisabledByEmail(String email);
     boolean makeUserEnabledByEmail(String email);
+    Role getRoleByName(String roleName);
 
 }

@@ -2,6 +2,7 @@ package com.example.controller;
 
 import com.example.demo.entity.authentication.AccountVerification;
 import com.example.demo.entity.authentication.PasswordReset;
+import com.example.demo.entity.authentication.Role;
 import com.example.demo.entity.authentication.UserEntity;
 import com.example.demo.service.UserEntityService;
 import com.example.demo.service.authentication.EmailService;
@@ -85,6 +86,12 @@ public class AuthController {
             return "register";
         }else{
             user.setEncryptedPassword(passwordEncoder.encode(user.getEncryptedPassword()));
+
+            Role employeeRole= userEntityService.getRoleByName("CUSTOMER");
+            if(employeeRole!=null){
+                user.setRoles(Set.of(employeeRole)); // add customer role to user
+            }
+
             Optional<UserEntity> userSaved= userEntityService.saveOrUpdate(user);
             emailService.sendVerificationEmail(userSaved.get().getEmail(), false);
 
