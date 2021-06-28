@@ -5,6 +5,8 @@ import com.example.demo.service.ItemService;
 import com.example.demo.service.ItemSortingService;
 import com.example.demo.service.UserEntityService;
 import com.example.demo.service.authentication.JpaUserDetailsService;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -14,11 +16,14 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+@PropertySource("classpath:app.properties")
 @Controller
 public class HomeController {
     private final ItemService itemService;
     private final ItemSortingService itemSortingService;
     private final UserEntityService userEntityService;
+    @Value("${context.path}")
+    private String webpageContextPath;
 
     public HomeController(ItemService itemService, ItemSortingService itemSortingService, UserEntityService userEntityService) {
         this.itemService = itemService;
@@ -42,6 +47,7 @@ public class HomeController {
         model.addAttribute("categoryList", itemSortingService.getCategories());
         model.addAttribute("sizeList", itemSortingService.getSizes());
         model.addAttribute("pageCount", itemService.pageCount(8));
+        model.addAttribute("contextPath", webpageContextPath);
         return "product-list-page";
     }
 

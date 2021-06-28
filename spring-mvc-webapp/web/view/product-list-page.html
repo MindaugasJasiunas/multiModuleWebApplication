@@ -279,7 +279,10 @@
 
 <script language="javascript" th:inline="javascript">
     /*<![CDATA[*/
-    let pageCount = /*[[${pageCount}]]*/ 'default';
+    let pageCount = /*[[${pageCount}]]*/ '1';
+    /*]]>*/
+    /*<![CDATA[*/
+    let contextPath = /*[[${contextPath}]]*/  'localhost:8080';
     /*]]>*/
     let pageNumber=1;
 
@@ -307,7 +310,7 @@
     function getJSONDataItems(){
         var settings={
             "async":true,
-            "url":"http://localhost:8080/spring_mvc_webapp_war_exploded/api/v1/items?page="+pageNumber,
+            "url": contextPath+"/api/v1/items?page="+pageNumber,
             "method":"GET"
         }
 
