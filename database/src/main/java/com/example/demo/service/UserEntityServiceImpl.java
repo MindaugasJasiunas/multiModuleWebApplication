@@ -16,12 +16,12 @@ import java.util.UUID;
 @Service
 public class UserEntityServiceImpl implements UserEntityService{
     private final UserEntityRepository userEntityRepo;
-    private final RoleRepository roleRepo;
+    private final RoleService roleService;
     private final PasswordEncoder passwordEncoder;
 
-    public UserEntityServiceImpl(UserEntityRepository userEntityRepo, RoleRepository roleRepo, PasswordEncoder passwordEncoder) {
+    public UserEntityServiceImpl(UserEntityRepository userEntityRepo, RoleService roleService, PasswordEncoder passwordEncoder) {
         this.userEntityRepo = userEntityRepo;
-        this.roleRepo = roleRepo;
+        this.roleService = roleService;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -31,14 +31,12 @@ public class UserEntityServiceImpl implements UserEntityService{
             //new user - set disabled
             user.setEnabled(false);
             //add role
-            if(roleRepo.findRoleByRoleName("CUSTOMER").isPresent()){
-                Role customerRole= roleRepo.findRoleByRoleName("CUSTOMER").get();
+            if(roleService.isRoleExistsByRoleName("CUSTOMER")){
+                Role customerRole= roleService.getRoleByRoleName("CUSTOMER").get();
                 user.setRoles(Set.of(customerRole)); // add customer role to user
             }
         }
         Optional<UserEntity> userSavedInDB=Optional.empty();
-
-
         try{
             UserEntity saved= userEntityRepo.save(user);
             userSavedInDB= Optional.of(saved);
@@ -78,7 +76,7 @@ public class UserEntityServiceImpl implements UserEntityService{
 
     @Override
     public boolean makeUserDisabledByEmail(String email){
-        if(userEntityRepo.findUserEntityByEmail(email).isPresent()){
+        if(isUserExistsByUserEntityEmail(email)){
             UserEntity user=userEntityRepo.findUserEntityByEmail(email).get();
             user.setEnabled(false);
             userEntityRepo.save(user);
@@ -90,7 +88,7 @@ public class UserEntityServiceImpl implements UserEntityService{
 
     @Override
     public boolean makeUserEnabledByEmail(String email){
-        if(userEntityRepo.findUserEntityByEmail(email).isPresent()){
+        if(isUserExistsByUserEntityEmail(email)){
             UserEntity user=userEntityRepo.findUserEntityByEmail(email).get();
             user.setEnabled(true);
             userEntityRepo.save(user);
@@ -100,5 +98,19 @@ public class UserEntityServiceImpl implements UserEntityService{
         }
     }
 
+    @Override
+    public boolean isUserExistsByUserEntityPublicId(UUID publicId){
+        if(userEntityRepo.findUserEntityByPublicId(publicId).isPresent()){
+            return true;
+        }
+        return false;
+    }
 
+    @Override
+    public boolean isUserExistsByUserEntityEmail(String email) {
+        if(userEntityRepo.findUserEntityByEmail(email).isPresent()){
+            return true;
+        }
+        return false;
+    }
 }

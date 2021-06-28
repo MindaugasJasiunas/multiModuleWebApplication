@@ -17,4 +17,7 @@ public interface UserEntityService {
     boolean makeUserDisabledByEmail(String email);
     boolean makeUserEnabledByEmail(String email);
 
+    boolean isUserExistsByUserEntityPublicId(UUID publicId);
+    boolean isUserExistsByUserEntityEmail(String email);
+
 }
