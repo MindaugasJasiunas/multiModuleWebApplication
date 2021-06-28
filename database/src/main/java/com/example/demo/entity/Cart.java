@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -22,9 +23,18 @@ public class Cart {
     @JoinColumn(name = "user_id")
     private UserEntity user;
     @ToString.Exclude
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "cart_id")
     List<CartItem> cartItems;
+
+
+    //convenience method
+    public void addCartItem(CartItem cartItem){
+        if(cartItems==null){
+            cartItems=new ArrayList<>();
+        }
+        cartItems.add(cartItem);
+    }
 
 
 }
