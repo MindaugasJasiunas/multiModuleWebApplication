@@ -51,11 +51,6 @@ public class HomeController {
         return "product-list-page";
     }
 
-    @RequestMapping("/product")
-    public String showProductPage() {
-        return "product-page";
-    }
-
     @RequestMapping("/checkout")
     public String showCheckoutPage(){
         return "checkout";
