@@ -61,18 +61,6 @@ public class HomeController {
         return "checkout";
     }
 
-    @RequestMapping("/cart")
-    public String showShoppingCartPage(@AuthenticationPrincipal UserEntity user, Model model){
-        if(userEntityService.findUserEntityByEmail(user.getUsername()).isPresent()){
-            UserEntity userEntity= userEntityService.findUserEntityByEmail(user.getUsername()).get();
-            //TODO: implement functionality & load cart by user
-        }else{
-            return "redirect:/";
-        }
-        //load items to shopping cart by user
-        return "cart";
-    }
-
     @RequestMapping("/admin")
     public String showAdminPage(){
         return "admin";
