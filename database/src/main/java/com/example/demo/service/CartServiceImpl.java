@@ -8,6 +8,10 @@ import com.example.demo.entity.Item;
 import com.example.demo.entity.authentication.UserEntity;
 import org.springframework.stereotype.Service;
 
+import javax.money.CurrencyUnit;
+import javax.money.Monetary;
+import javax.money.MonetaryAmount;
+import java.util.Iterator;
 import java.util.UUID;
 
 @Service
@@ -40,7 +44,6 @@ public class CartServiceImpl implements CartService {
         }
     }
 
-
     @Override
     public void addItemToCart(UserEntity userEntity, UUID itemPublicId, int quantity){
         if(quantity<1 || !itemService.isItemExistsByPublicId(itemPublicId)){
@@ -72,10 +75,57 @@ public class CartServiceImpl implements CartService {
         cartItem.setItem(item);
         if(quantityInWarehouse < quantity){
             cartItem.setQuantity(quantityInWarehouse);
+        }else{
+            cartItem.setQuantity(quantity);
         }
         cartItem= cartItemRepo.save(cartItem);
         userCart.addCartItem(cartItem);
         cartRepo.save(userCart);
+    }
+
+    @Override
+    public void refreshCart(Cart cart){
+        if(cartRepo.findById(cart.getId()).isPresent()){
+            Iterator<CartItem> i=cart.getCartItems().iterator();
+            while(i.hasNext()){
+                CartItem cartItem= i.next();
+
+                //if quantity in cart(only way - when using buttons in cart) or quantity in warehouse 0 - remove
+                if(cartItem.getQuantity()<1 || itemService.getItemQuantityInWarehouse(cartItem.getItem())<1){
+                    cart.getCartItems().remove(cartItem);
+                    cartItemRepo.delete(cartItem);
+                    return;
+                }
+                //if quantity in cart more than quantity in warehouse - update cart item
+                if(cartItem.getQuantity() > itemService.getItemQuantityInWarehouse(cartItem.getItem())){
+                    cartItem.setQuantity(itemService.getItemQuantityInWarehouse(cartItem.getItem()));
+                    cartItemRepo.save(cartItem);
+                    return;
+                }
+            }
+        }
+    }
+
+    @Override
+    public MonetaryAmount getCartTotalPrice(UserEntity userEntity){
+        Cart cart= createNewOrFindExistingCart(userEntity);
+
+        CurrencyUnit euro= Monetary.getCurrency("EUR");
+        MonetaryAmount total= Monetary.getDefaultAmountFactory().setCurrency(euro).setNumber(0).create();
+        for(CartItem cartItem : cart.getCartItems()){
+            total= total.add(cartItem.getItem().getPrice().multiply(cartItem.getQuantity()));
+        }
+        return total;
+    }
+
+    @Override
+    public int getCartTotalAmountOfItems(UserEntity userEntity){
+        Cart cart= createNewOrFindExistingCart(userEntity);
+        int total=0;
+        for(CartItem cartItem : cart.getCartItems()){
+            total+= cartItem.getQuantity();
+        }
+        return total;
     }
 
 

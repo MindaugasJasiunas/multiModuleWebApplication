@@ -34,23 +34,20 @@ public class CartController {
         if(userEntityService.isUserExistsByUserEntityEmail(user.getUsername())){
             UserEntity userEntity= userEntityService.findUserEntityByEmail(user.getUsername()).get();
 
-            //TODO: implement functionality & load cart by user
             Cart cart= cartService.createNewOrFindExistingCart(userEntity);
+            //update cart items before showing
+            cartService.refreshCart(cart);
             model.addAttribute("cartItems", cart.getCartItems());
-
+            model.addAttribute("cartTotal", cartService.getCartTotalPrice(user));
         }else{
             return "redirect:/";
         }
-        //load items to shopping cart by user
         return "cart";
     }
 
 
     @PostMapping("/addToCart/{itemPublicId}")
     public String processCheckout(@AuthenticationPrincipal UserEntity user, @PathVariable("itemPublicId") UUID itemPublicId, @RequestParam(value = "inputQuantity", defaultValue = "0") String quantity) {
-        //check to have a cart
-        cartService.createNewOrFindExistingCart(user);
-
         //if item exists
         if(itemService.findItemByPublicId(itemPublicId).isPresent()){
             Item item= itemService.findItemByPublicId(itemPublicId).get();
@@ -72,6 +69,13 @@ public class CartController {
 
     @RequestMapping("/checkout")
     public String showCheckoutPage(@AuthenticationPrincipal UserEntity user){
+        //if there is no items in cart and user going to checkout page - redirect to main page
+        if(cartService.getCartTotalAmountOfItems(user)==0){
+            return "redirect:/";
+        }
+        //update cart items before showing
+        cartService.refreshCart(cartService.createNewOrFindExistingCart(user));
+        //TODO: add items from cart in model & change HTML view
         return "checkout";
     }
 }
