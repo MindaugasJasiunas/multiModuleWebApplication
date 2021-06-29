@@ -2,8 +2,10 @@ package com.example.controller;
 
 
 import com.example.demo.entity.Cart;
+import com.example.demo.entity.Item;
 import com.example.demo.entity.authentication.UserEntity;
 import com.example.demo.service.CartService;
+import com.example.demo.service.ItemService;
 import com.example.demo.service.UserEntityService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -19,10 +21,12 @@ import java.util.UUID;
 public class CartController {
     private final CartService cartService;
     private final UserEntityService userEntityService;
+    private final ItemService itemService;
 
-    public CartController(CartService cartService, UserEntityService userEntityService) {
+    public CartController(CartService cartService, UserEntityService userEntityService, ItemService itemService) {
         this.cartService = cartService;
         this.userEntityService = userEntityService;
+        this.itemService = itemService;
     }
 
     @RequestMapping("/cart")
@@ -41,10 +45,33 @@ public class CartController {
         return "cart";
     }
 
+
     @PostMapping("/addToCart/{itemPublicId}")
     public String processCheckout(@AuthenticationPrincipal UserEntity user, @PathVariable("itemPublicId") UUID itemPublicId, @RequestParam(value = "inputQuantity", defaultValue = "0") String quantity) {
-        //return redirect to the same item
+        //check to have a cart
+        cartService.createNewOrFindExistingCart(user);
+
+        //if item exists
+        if(itemService.findItemByPublicId(itemPublicId).isPresent()){
+            Item item= itemService.findItemByPublicId(itemPublicId).get();
+
+            int itemQuantity=0;
+            try{
+                //server-side validation
+                itemQuantity=Integer.parseInt(quantity);
+
+                cartService.addItemToCart(user, itemPublicId, itemQuantity);
+            }catch (NumberFormatException e){
+                return "redirect:/item/"+itemPublicId;
+            }
+        }
+        //return redirect to the same item with success
         return "redirect:/item/"+itemPublicId+"?added";
     }
 
+
+    @RequestMapping("/checkout")
+    public String showCheckoutPage(@AuthenticationPrincipal UserEntity user){
+        return "checkout";
+    }
 }

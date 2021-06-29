@@ -1,6 +1,5 @@
 package com.example.demo.service;
 
-import com.example.demo.dao.authentication.RoleRepository;
 import com.example.demo.dao.authentication.UserEntityRepository;
 import com.example.demo.entity.authentication.Role;
 import com.example.demo.entity.authentication.UserEntity;
@@ -18,11 +17,13 @@ public class UserEntityServiceImpl implements UserEntityService{
     private final UserEntityRepository userEntityRepo;
     private final RoleService roleService;
     private final PasswordEncoder passwordEncoder;
+    private final CartService cartService;
 
-    public UserEntityServiceImpl(UserEntityRepository userEntityRepo, RoleService roleService, PasswordEncoder passwordEncoder) {
+    public UserEntityServiceImpl(UserEntityRepository userEntityRepo, RoleService roleService, PasswordEncoder passwordEncoder, CartService cartService) {
         this.userEntityRepo = userEntityRepo;
         this.roleService = roleService;
         this.passwordEncoder = passwordEncoder;
+        this.cartService = cartService;
     }
 
     @Override
@@ -39,9 +40,12 @@ public class UserEntityServiceImpl implements UserEntityService{
         Optional<UserEntity> userSavedInDB=Optional.empty();
         try{
             UserEntity saved= userEntityRepo.save(user);
+            //create and assign cart for every new user
+            cartService.createNewOrFindExistingCart(saved);
             userSavedInDB= Optional.of(saved);
         }catch (ConstraintViolationException emailDuplicate){
             //email already exists in DB
+            //should never be thrown because of custom UserEntity validation
         }
         return userSavedInDB;
     }

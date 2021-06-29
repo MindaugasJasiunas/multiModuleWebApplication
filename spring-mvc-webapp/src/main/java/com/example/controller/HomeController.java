@@ -4,7 +4,6 @@ import com.example.demo.entity.authentication.UserEntity;
 import com.example.demo.service.ItemService;
 import com.example.demo.service.ItemSortingService;
 import com.example.demo.service.UserEntityService;
-import com.example.demo.service.authentication.JpaUserDetailsService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.security.core.Authentication;
@@ -49,11 +48,6 @@ public class HomeController {
         model.addAttribute("pageCount", itemService.pageCount(8));
         model.addAttribute("contextPath", webpageContextPath);
         return "product-list-page";
-    }
-
-    @RequestMapping("/checkout")
-    public String showCheckoutPage(){
-        return "checkout";
     }
 
     @RequestMapping("/admin")

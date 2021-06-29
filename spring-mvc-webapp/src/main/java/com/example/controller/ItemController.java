@@ -38,7 +38,7 @@ public class ItemController {
 
         model.addAttribute("relatedItems", itemService.getItemsForRelatedProducts(4));
         model.addAttribute("storeWithQuantityMap", map);
-        model.addAttribute("leftInWarehouse", itemService.ItemQuantityInWarehouse(item));
+        model.addAttribute("leftInWarehouse", itemService.getItemQuantityInWarehouse(item));
         model.addAttribute("item", item);
         return "product-page";
     }

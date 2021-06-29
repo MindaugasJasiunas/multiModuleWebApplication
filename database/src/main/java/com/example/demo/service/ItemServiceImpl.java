@@ -35,7 +35,7 @@ public class ItemServiceImpl implements ItemService{
     }
 
     @Override
-    public int ItemQuantityInWarehouse(Item item){
+    public int getItemQuantityInWarehouse(Item item){
         int leftInWarehouse=0;
         if(storeRepository.getStoreByStoreTitle("Warehouse").isPresent()){
             Store warehouse= storeRepository.getStoreByStoreTitle("Warehouse").get();
@@ -93,6 +93,14 @@ public class ItemServiceImpl implements ItemService{
         }
         log.error("Warehouse not found!");
         return null;
+    }
+
+    @Override
+    public boolean isItemExistsByPublicId(UUID itemPublicId){
+        if(itemRepository.findItemByPublicId(itemPublicId).isPresent()){
+            return true;
+        }
+        return false;
     }
 
 

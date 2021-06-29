@@ -40,8 +40,7 @@ public class SecurityWebAppConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/forgot").permitAll()
                 .antMatchers("/verify/**").permitAll()  // link to confirm email/change password
 
-                .antMatchers("/cart").hasRole("CUSTOMER")
-                .antMatchers("/checkout").hasRole("CUSTOMER")
+                .antMatchers("/cart", "/addToCart/*", "/checkout").hasRole("CUSTOMER")
 
                 .antMatchers("/admin/**").hasRole("ADMIN")
 
