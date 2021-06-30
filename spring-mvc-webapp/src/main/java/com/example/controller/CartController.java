@@ -10,10 +10,7 @@ import com.example.demo.service.UserEntityService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
@@ -67,15 +64,25 @@ public class CartController {
     }
 
 
-    @RequestMapping("/checkout")
-    public String showCheckoutPage(@AuthenticationPrincipal UserEntity user){
-        //if there is no items in cart and user going to checkout page - redirect to main page
-        if(cartService.getCartTotalAmountOfItems(user)==0){
+    @GetMapping("/checkout")
+    public String showCheckoutPage(@AuthenticationPrincipal UserEntity user, Model model){
+        if(userEntityService.isUserExistsByUserEntityEmail(user.getUsername())) {
+            //if there is no items in cart and user going to checkout page - redirect to main page
+            if (cartService.getCartTotalAmountOfItems(user) == 0) {
+                return "redirect:/";
+            }
+            Cart userCart = cartService.createNewOrFindExistingCart(user);
+            //update cart items before showing
+            cartService.refreshCart(userCart);
+
+            model.addAttribute("cartItems", userCart.getCartItems());
+            model.addAttribute("cartTotal", cartService.getCartTotalPrice(user));
+            model.addAttribute("user", user);
+            model.addAttribute("totalNumberOfItems", cartService.getCartTotalAmountOfItems(user));
+
+            return "checkout";
+        }else{
             return "redirect:/";
         }
-        //update cart items before showing
-        cartService.refreshCart(cartService.createNewOrFindExistingCart(user));
-        //TODO: add items from cart in model & change HTML view
-        return "checkout";
     }
 }
