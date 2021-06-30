@@ -58,11 +58,11 @@
             </div>
 
             <div class="d-flex flex-row align-items-center mt-3 p-2 bg-white rounded" sec:authorize="isFullyAuthenticated()">
-                <a class="btn btn-warning btn-block btn-lg ml-2 pay-button" type="button" th:href="@{/checkout}">Proceed to Pay</a>
+                <a class="btn btn-warning btn-block btn-lg ml-2 pay-button" type="button" th:href="@{/checkout}">Continue to checkout</a>
             </div>
 
             <div class="d-flex flex-row align-items-center mt-3 p-2 bg-white rounded" sec:authorize="!isFullyAuthenticated()">
-                <a class="btn btn-info btn-block btn-lg ml-2 pay-button" type="button" th:href="@{/login}">Login before proceeding to Pay</a>
+                <a class="btn btn-info btn-block btn-lg ml-2 pay-button" type="button" th:href="@{/login}">Login before continuing to checkout</a>
             </div>
 
         </div>
