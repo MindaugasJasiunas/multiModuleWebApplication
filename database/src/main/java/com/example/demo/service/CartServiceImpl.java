@@ -129,4 +129,64 @@ public class CartServiceImpl implements CartService {
     }
 
 
+    @Override
+    public void deleteAllItemsFromCartAndUpdateWarehouse(UserEntity userEntity){
+        Cart cart= createNewOrFindExistingCart(userEntity);
+        //delete all items from cart AND change warehouse quantity
+        Iterator<CartItem> i= cart.getCartItems().iterator();
+        while(i.hasNext()){
+            CartItem cartItem=i.next();
+            itemService.deleteFromWarehouse(cartItem);
+            cartItemRepo.delete(cartItem);
+        }
+    }
+
+
+    @Override
+    public void removeItemFromCart(UserEntity userEntity, UUID itemPublicId, int quantity){
+        //if quantity wanted is 0 or less
+        if(quantity<1){
+            return;
+        }
+        //if item exists
+        if(itemService.isItemExistsByPublicId(itemPublicId)){
+            Item itemFromDB= itemService.findItemByPublicId(itemPublicId).get();
+            int quantityInWarehouse= itemService.getItemQuantityInWarehouse(itemFromDB);
+            //if quantity wanted or quantity in warehouse 0 - dont add
+            if(quantityInWarehouse<1){
+                return;
+            }
+            //quantity in warehouse not 0
+            Cart cart= createNewOrFindExistingCart(userEntity);
+            //find wanted item
+            for(CartItem cartItem: cart.getCartItems()){
+                //found CartItem
+                if(cartItem.getItem().getPublicId().equals(itemPublicId)){
+                    //if new quantity 0 or less -set quantity 0
+                    if(cartItem.getQuantity()-quantity <1){
+                        //delete cartItem
+                        cartItemRepo.delete(cartItem);
+                    //if new quantity bigger than 0 - change quantity
+                    }else if(cartItem.getQuantity()-quantity >0){
+                        cartItem.setQuantity(cartItem.getQuantity()-quantity);
+                        //update cartItem
+                        cartItemRepo.save(cartItem);
+                    }
+                    //refresh cart to delete items with 0 quantity left
+                    refreshCart(cart);
+                }
+            }
+
+            //update cart
+            refreshCart(cart);
+
+
+
+            //check if
+        }
+
+
+    }
+
+
 }

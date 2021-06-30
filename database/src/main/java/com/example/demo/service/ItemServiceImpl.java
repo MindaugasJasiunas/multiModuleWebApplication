@@ -3,6 +3,7 @@ package com.example.demo.service;
 import com.example.demo.dao.ItemRepository;
 import com.example.demo.dao.StoreItemRepository;
 import com.example.demo.dao.StoreRepository;
+import com.example.demo.entity.CartItem;
 import com.example.demo.entity.Item;
 import com.example.demo.entity.Store;
 import com.example.demo.entity.StoreItem;
@@ -104,4 +105,15 @@ public class ItemServiceImpl implements ItemService{
     }
 
 
+    @Override
+    public void deleteFromWarehouse(CartItem cartItem) {
+        if(isItemExistsByPublicId(cartItem.getItem().getPublicId())){
+            if(storeItemRepository.findStoreItemByItemAndStore(cartItem.getItem(), getWarehouse()).isPresent()){
+                StoreItem storeItem= storeItemRepository.findStoreItemByItemAndStore(cartItem.getItem(), getWarehouse()).get();
+                int quantity= storeItem.getQuantity()-cartItem.getQuantity();
+                storeItem.setQuantity(quantity);
+                storeItem=storeItemRepository.save(storeItem);
+            }
+        }
+    }
 }

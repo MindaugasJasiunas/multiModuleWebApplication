@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.entity.CartItem;
 import com.example.demo.entity.Item;
 import com.example.demo.entity.Store;
 import org.springframework.data.domain.Page;
@@ -19,4 +20,5 @@ public interface ItemService {
     List<Item> getItemsForRelatedProducts(int howMany);
     Store getWarehouse();
     boolean isItemExistsByPublicId(UUID itemPublicId);
+    void deleteFromWarehouse(CartItem cartItem);
 }

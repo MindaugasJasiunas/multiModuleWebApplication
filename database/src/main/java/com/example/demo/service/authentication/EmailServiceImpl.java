@@ -1,11 +1,11 @@
 package com.example.demo.service.authentication;
 
 import com.example.demo.dao.authentication.AccountVerificationRepository;
+import com.example.demo.entity.Order;
 import com.example.demo.entity.authentication.AccountVerification;
 import com.example.demo.entity.authentication.UserEntity;
 import com.example.demo.service.UserEntityService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -16,6 +16,7 @@ import org.thymeleaf.spring5.SpringTemplateEngine;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import javax.money.MonetaryAmount;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -31,10 +32,14 @@ public class EmailServiceImpl implements EmailService{
     private final JavaMailSender emailSender;
     private final SpringTemplateEngine thymeleafTemplateEngine;
 
-    @Value("${mail.template}")
-    private String mailTemplate;
-    @Value("${mail.title}")
-    private String mailTitle;
+    @Value("${mail.verification.template}")
+    private String mailVerificationTemplate;
+    @Value("${mail.order.template}")
+    private String mailOrderTemplate;
+    @Value("${mail.verification.title}")
+    private String mailVerificationTitle;
+    @Value("${mail.order.title}")
+    private String mailOrderTitle;
     @Value("${mail.sender}")
     private String mailSender;
     @Value("${mail.baselink}")
@@ -91,20 +96,28 @@ public class EmailServiceImpl implements EmailService{
         try{
             Map<String, Object> arguments=new HashMap<>();
             arguments.put("link", mailBaseLink + verification.getVerificationCode());
-            sendMessageUsingThymeleafTemplate(email, mailTitle, arguments);
+            sendConfirmationMessageUsingThymeleafTemplate(email, mailVerificationTitle, arguments);
         }catch (MessagingException e){
             log.error("Error when sending email: "+e.getMessage());
         }
     }
 
 
-
-    private void sendMessageUsingThymeleafTemplate(String to, String subject, Map< String, Object> arguments) throws MessagingException {
-        Context ctx= new Context();   // import org.thymeleaf.Context
-        ctx.setVariables(arguments);
-        String htmlBody= thymeleafTemplateEngine.process(mailTemplate, ctx);
-        sendHtmlMessage(to, subject, htmlBody);
+    @Override
+    public void sendOrderConfirmationEmail(String email, Order order, MonetaryAmount totalPrice){
+        if(userEntityService.findUserEntityByEmail(email).isEmpty()){
+            return;
+        }
+        try{
+            Map<String, Object> arguments=new HashMap<>();
+            arguments.put("order", order);
+            arguments.put("totalPrice", totalPrice);
+            sendOrderMessageUsingThymeleafTemplate(email, mailOrderTitle, arguments);
+        }catch (MessagingException e){
+            log.error("Error when sending email: "+e.getMessage());
+        }
     }
+
 
     private void sendHtmlMessage(String to, String subject, String htmlBody) throws MessagingException {
         MimeMessage msg= emailSender.createMimeMessage();
@@ -119,6 +132,21 @@ public class EmailServiceImpl implements EmailService{
     }
 
 
+
+    private void sendOrderMessageUsingThymeleafTemplate(String to, String subject, Map< String, Object> arguments) throws MessagingException {
+        Context ctx= new Context();   // import org.thymeleaf.Context
+        ctx.setVariables(arguments);
+        String htmlBody= thymeleafTemplateEngine.process(mailOrderTemplate, ctx);
+        sendHtmlMessage(to, subject, htmlBody);
+    }
+
+
+    private void sendConfirmationMessageUsingThymeleafTemplate(String to, String subject, Map< String, Object> arguments) throws MessagingException {
+        Context ctx= new Context();   // import org.thymeleaf.Context
+        ctx.setVariables(arguments);
+        String htmlBody= thymeleafTemplateEngine.process(mailVerificationTemplate, ctx);
+        sendHtmlMessage(to, subject, htmlBody);
+    }
 
 
 

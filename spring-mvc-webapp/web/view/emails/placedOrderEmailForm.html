@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Order confirmation email</title>
+    <style>
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td, th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+    </style>
+</head>
+<body>
+    <h2>Thanks for shopping with us!</h2>
+    <h6>We are sending your order details.</h6>
+
+    <h5>Details:</h5>
+    <p th:text="${order.firstName}"></p>
+    <p th:text="${order.lastName}"></p>
+    <p th:text="${order.address}"></p>
+    <p th:text="${order.address2}"></p>
+    <p th:text="${order.country}"></p>
+    <p th:text="${order.state}"></p>
+    <p th:text="${order.zipCode}"></p>
+
+    <br/><br/>
+    <table>
+        <tr>
+            <th>Item</th>
+            <th>Quantity</th>
+            <th>Price per item</th>
+        </tr>
+        <tr th:each="orderItem: ${order.orderItems}">
+            <td th:text="${orderItem.item.title}">Product title</td>
+            <td th:text="${orderItem.quantity}">1</td>
+            <td th:text="${orderItem.item.price}">Product price</td>
+        </tr>
+
+
+    </table>
+<h3 th:text="${'Total: '+totalPrice}"></h3>
+</body>
+</html>

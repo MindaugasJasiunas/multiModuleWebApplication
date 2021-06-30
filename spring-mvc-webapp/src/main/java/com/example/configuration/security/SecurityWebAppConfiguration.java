@@ -33,14 +33,17 @@ public class SecurityWebAppConfiguration extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers("/"/*,"index","/css/*","/js/*"*/).permitAll()
                 .antMatchers("/resources/**", "/webjars/**").permitAll()
+
                 .antMatchers("/api/v1/items").permitAll()  // REST endpoint call in main page for items
+                .antMatchers("/api/v1/states/*").permitAll()
+
                 .antMatchers("/item/**").permitAll()
                 .antMatchers("/login").permitAll()
                 .antMatchers("/register").permitAll()
                 .antMatchers("/forgot").permitAll()
                 .antMatchers("/verify/**").permitAll()  // link to confirm email/change password
 
-                .antMatchers("/cart", "/addToCart/*", "/checkout").hasRole("CUSTOMER")
+                .antMatchers("/cart", "/addToCart/*", "/checkout", "/removeOne/*", "/addOne/*").hasRole("CUSTOMER")
 
                 .antMatchers("/admin/**").hasRole("ADMIN")
 

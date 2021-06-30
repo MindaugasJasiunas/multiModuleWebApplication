@@ -22,6 +22,14 @@
     </div>
 </section>
 
+<section class="py-5" th:if="${param.successCheckout}">
+    <div class="container px-4 px-lg-5 mt-5">
+        <div class="col">
+            <div class="alert alert-success" role="alert">Successfully purchased! Check your email for order details!</div>
+        </div>
+    </div>
+</section>
+
 <section class="py-5">
     <div class="container px-4 px-lg-5 mt-5">
         <div class="col">
@@ -336,7 +344,6 @@
 
             var getUrl = window.location;
             var baseUrl = getUrl .protocol + "//" + getUrl.host + "/" + getUrl.pathname.split('/')[1];  // http://localhost:8080/spring_mvc_webapp_war_exploded
-            // console.log(baseUrl);
         })
     }
 
