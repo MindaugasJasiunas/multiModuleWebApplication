@@ -1,5 +1,6 @@
 package com.example.controller;
 
+import com.example.demo.UtilClass;
 import com.example.demo.dao.ItemRepository;
 import com.example.demo.entity.Item;
 import com.example.demo.service.ItemService;
@@ -8,10 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -33,6 +31,12 @@ public class RestfulController {
         Pageable pageAndSizeAndSorted = PageRequest.of(page, 8, Sort.by(sortBy));
         Page<Item> p=itemService.findAll(pageAndSizeAndSorted);
        return p.getContent();
+    }
+
+    @RequestMapping("/states/{country}")
+    @ResponseBody
+    public List<String> getStatesByCountry(@PathVariable("country") String country){
+        return UtilClass.getStatesByCountry(country);
     }
 
 }
