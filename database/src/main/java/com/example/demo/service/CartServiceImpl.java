@@ -5,12 +5,15 @@ import com.example.demo.dao.CartRepository;
 import com.example.demo.entity.Cart;
 import com.example.demo.entity.CartItem;
 import com.example.demo.entity.Item;
+import com.example.demo.entity.Order;
 import com.example.demo.entity.authentication.UserEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.BindingResult;
 
 import javax.money.CurrencyUnit;
 import javax.money.Monetary;
 import javax.money.MonetaryAmount;
+import java.time.LocalDate;
 import java.util.Iterator;
 import java.util.UUID;
 
@@ -152,7 +155,7 @@ public class CartServiceImpl implements CartService {
         if(itemService.isItemExistsByPublicId(itemPublicId)){
             Item itemFromDB= itemService.findItemByPublicId(itemPublicId).get();
             int quantityInWarehouse= itemService.getItemQuantityInWarehouse(itemFromDB);
-            //if quantity wanted or quantity in warehouse 0 - dont add
+            //if quantity in warehouse 0 - return
             if(quantityInWarehouse<1){
                 return;
             }
@@ -162,31 +165,53 @@ public class CartServiceImpl implements CartService {
             for(CartItem cartItem: cart.getCartItems()){
                 //found CartItem
                 if(cartItem.getItem().getPublicId().equals(itemPublicId)){
-                    //if new quantity 0 or less -set quantity 0
+                    //if new quantity 0 or less - delete cart item
                     if(cartItem.getQuantity()-quantity <1){
                         //delete cartItem
                         cartItemRepo.delete(cartItem);
-                    //if new quantity bigger than 0 - change quantity
+                    //if new quantity more than 0 - change quantity
                     }else if(cartItem.getQuantity()-quantity >0){
                         cartItem.setQuantity(cartItem.getQuantity()-quantity);
                         //update cartItem
                         cartItemRepo.save(cartItem);
                     }
-                    //refresh cart to delete items with 0 quantity left
-                    refreshCart(cart);
                 }
             }
-
             //update cart
             refreshCart(cart);
-
-
-
-            //check if
         }
-
-
     }
 
+    @Override
+    public BindingResult checkBankingInfo(Order order, BindingResult br) {
+        // test banking card info
 
+        //check card expiration (can be changed to regex if conditional regex supported)
+        //check if not null
+        if(order.getExpiration()!=null){
+            //check if XX/XX 5 symbols
+            if(order.getExpiration().length()==5){
+                //check if numbers passed
+                try{
+                    int expirationMonth= Integer.parseInt(order.getExpiration().substring(0,2));
+                    int expirationYear= Integer.parseInt(order.getExpiration().substring(3,5));
+                    int month=LocalDate.now().getMonthValue();
+                    int year=Integer.parseInt(String.valueOf(LocalDate.now().getYear()).substring(2,4));
+                    //check if month is valid
+                    if(expirationMonth>=1 && expirationMonth<13){
+                        //check if expiration year not in the past
+                        if(expirationYear>=year){
+                            if((expirationYear==year && expirationMonth>month) || expirationYear>year){
+                                // everything is valid
+                                return br;
+                            }
+                        }
+                    }
+                }catch (NumberFormatException | NullPointerException ignored){
+                }
+            }
+        }
+        br.rejectValue("expiration", "error.order", "Check expiration field.");
+        return br;
+    }
 }

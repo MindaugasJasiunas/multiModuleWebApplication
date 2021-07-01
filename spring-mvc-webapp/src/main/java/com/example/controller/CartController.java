@@ -111,14 +111,17 @@ public class CartController {
 
     @PostMapping("/checkout")
     public String processCheckout(@Valid @ModelAttribute("order") Order order, BindingResult br, @AuthenticationPrincipal UserEntity userEntity, Model model, HttpServletRequest request){
-        //if has errors -return to the same page with errors
-        if(br.hasErrors()){
-            System.out.println(br.getAllErrors());
+        //check if card data is valid
+        br=cartService.checkBankingInfo(order, br);
 
+        // *** send card info to bank ***
+        //br=bankingService.validateAndCheckout(order, br);
+
+        //if has form or banking card errors -return to the same page with errors
+        if(br.hasErrors()){
             Cart userCart = cartService.createNewOrFindExistingCart(userEntity);
             //update cart items before showing
             cartService.refreshCart(userCart);
-
             model.addAttribute("cartItems", userCart.getCartItems());
             model.addAttribute("cartTotal", cartService.getCartTotalPrice(userEntity));
             model.addAttribute("user", userEntity);
@@ -127,13 +130,9 @@ public class CartController {
             model.addAttribute("countries", UtilClass.getCountries());
             model.addAttribute("states", UtilClass.getStatesByCountry("Lithuania"));
             model.addAttribute("contextPath", webpageContextPath);
-
-
             return "checkout";
         }
-        //if no errors:
-        System.out.println(order);
-
+        //no errors
         Cart cart= cartService.createNewOrFindExistingCart(userEntity);
         //refresh cart one last time
         cartService.refreshCart(cart);
@@ -146,8 +145,6 @@ public class CartController {
             temp=orderService.saveOrderItem(temp);
             order.addOrderItem(temp); //save every OrderItem
         }
-
-        // *** send card info to bank ***
 
         //set user from which account order was placed
         order.setUser(userEntity);
@@ -171,13 +168,14 @@ public class CartController {
         if(itemService.findItemByPublicId(itemPublicId).isPresent()) {
             Item item = itemService.findItemByPublicId(itemPublicId).get();
 
-            //add item to cart
+            //remove item from cart
             cartService.removeItemFromCart(user, itemPublicId, 1);
 
             //refresh cart before showing view
             Cart cart= cartService.createNewOrFindExistingCart(user);
             cartService.refreshCart(cart);
         }
+        //return redirect to same page - cart
         return "redirect:/cart";
     }
 
@@ -194,7 +192,6 @@ public class CartController {
             Cart cart= cartService.createNewOrFindExistingCart(user);
             cartService.refreshCart(cart);
         }
-
         //return redirect to same page - cart
         return "redirect:/cart";
     }
