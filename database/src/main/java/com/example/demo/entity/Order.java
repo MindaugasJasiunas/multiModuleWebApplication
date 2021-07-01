@@ -38,7 +38,6 @@ public class Order {
     private String address2;
     @NotNull(message = "Country selection is required")
     @NotEmpty(message = "Country selection is required")
-//    @Enumerated(EnumType.STRING)
     private String country;
     @NotNull(message = "State selection is required")
     @NotEmpty(message = "State selection is required")
@@ -46,20 +45,23 @@ public class Order {
     @NotNull(message = "ZIP code cant be null")
     @NotEmpty(message = "ZIP code must not be empty")
     private String zipCode;
-
-    //dont save payment info - outsource to bank
+    //dont save payment info
+    @Transient
     @NotNull
     @NotEmpty
     @Pattern(regexp = "^[0-9]{2}/[0-9]{2}$", message = "Check expiration format")
     private String expiration;
+    @Transient
     @NotNull(message = "CVV cant be null")
     @NotEmpty(message = "CVV cant be empty")
     @Pattern(regexp = "^[0-9]{3}$", message = "Check CVV code")
     private String cvv;
+    @Transient
     @NotNull
     @NotEmpty
     @Pattern(regexp = "^(?:4[0-9]{12}(?:[0-9]{3})?|[25][1-7][0-9]{14}|6(?:011|5[0-9][0-9])[0-9]{12}|3[47][0-9]{13}|3(?:0[0-5]|[68][0-9])[0-9]{11}|(?:2131|1800|35\\d{3})\\d{11})$", message = "Check card number")
     private String creditCardNumber;
+    @Transient
     @NotNull(message = "Card name cant be null")
     @NotEmpty(message = "Card name cant be empty")
     @Pattern(regexp = "^[a-zA-Z]{2,} [a-zA-Z]{2,}.*$", message = "Check card name")

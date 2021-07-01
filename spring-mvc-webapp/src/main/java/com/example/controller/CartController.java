@@ -98,11 +98,9 @@ public class CartController {
             model.addAttribute("states", UtilClass.getStatesByCountry("Lithuania"));
             model.addAttribute("contextPath", webpageContextPath);
 
-
             Order order=new Order();
             order.setFirstName(user.getFirstName());
             order.setLastName(user.getLastName());
-            order.setUser(user);
             model.addAttribute("order", order);
 
             return "checkout";
@@ -150,12 +148,6 @@ public class CartController {
         }
 
         // *** send card info to bank ***
-
-        //remove card info from order (data protection)
-        order.setCardName(null);
-        order.setCreditCardNumber(null);
-        order.setCvv(null);
-        order.setExpiration(null);
 
         //set user from which account order was placed
         order.setUser(userEntity);
