@@ -45,7 +45,6 @@ Internationalization(I18N) configured and used in main page.
 - item images
 - cart items sorting
 - discount functionality
-- checkout functionality
 - admin functionality (view, disable users)
 - employee functionality (add new items, edit existing)
 - Unit + Integration tests 
