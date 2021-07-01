@@ -43,7 +43,7 @@ Internationalization(I18N) configured and used in main page.
 
 - item sorting by category, size, gender
 - item images
-- cart functionality
+- cart items sorting
 - discount functionality
 - checkout functionality
 - admin functionality (view, disable users)
