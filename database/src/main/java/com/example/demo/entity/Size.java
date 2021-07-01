@@ -1,12 +1,14 @@
 package com.example.demo.entity;
 
 import lombok.Data;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
 @Data
+@ToString
 
 @Entity
 public class Size {
@@ -18,6 +20,7 @@ public class Size {
     @Column(name = "size_title", unique = true)
     private String sizeTitle;
 
+    @ToString.Exclude
     @ManyToMany(mappedBy = "sizeSet")
     private Set<Item> studentSet=new HashSet<>();
 }

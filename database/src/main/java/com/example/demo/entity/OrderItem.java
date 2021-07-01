@@ -16,6 +16,7 @@ public class OrderItem {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "order_item_sequence")
     @Column(name = "id", unique = true)
     private long id;
+    //(FK) order_id
     @OneToOne
     @JoinColumn(name = "item_id")
     private Item item;
