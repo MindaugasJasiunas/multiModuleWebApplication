@@ -91,21 +91,23 @@ public class CartServiceImpl implements CartService {
     @Override
     public void refreshCart(Cart cart){
         if(cartRepo.findById(cart.getId()).isPresent()){
-            Iterator<CartItem> i=cart.getCartItems().iterator();
-            while(i.hasNext()){
-                CartItem cartItem= i.next();
+            if(cart.getCartItems()!=null){
+                Iterator<CartItem> i=cart.getCartItems().iterator();
+                while(i.hasNext()){
+                    CartItem cartItem= i.next();
 
-                //if quantity in cart(only way - when using buttons in cart) or quantity in warehouse 0 - remove
-                if(cartItem.getQuantity()<1 || itemService.getItemQuantityInWarehouse(cartItem.getItem())<1){
-                    cart.getCartItems().remove(cartItem);
-                    cartItemRepo.delete(cartItem);
-                    return;
-                }
-                //if quantity in cart more than quantity in warehouse - update cart item
-                if(cartItem.getQuantity() > itemService.getItemQuantityInWarehouse(cartItem.getItem())){
-                    cartItem.setQuantity(itemService.getItemQuantityInWarehouse(cartItem.getItem()));
-                    cartItemRepo.save(cartItem);
-                    return;
+                    //if quantity in cart(only way - when using buttons in cart) or quantity in warehouse 0 - remove
+                    if(cartItem.getQuantity()<1 || itemService.getItemQuantityInWarehouse(cartItem.getItem())<1){
+                        cart.getCartItems().remove(cartItem);
+                        cartItemRepo.delete(cartItem);
+                        return;
+                    }
+                    //if quantity in cart more than quantity in warehouse - update cart item
+                    if(cartItem.getQuantity() > itemService.getItemQuantityInWarehouse(cartItem.getItem())){
+                        cartItem.setQuantity(itemService.getItemQuantityInWarehouse(cartItem.getItem()));
+                        cartItemRepo.save(cartItem);
+                        return;
+                    }
                 }
             }
         }
