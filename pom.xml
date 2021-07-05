@@ -25,6 +25,15 @@
         <hibernate.validator.version>6.2.0.Final</hibernate.validator.version>
 
         <thymeleaf.version>3.0.12.RELEASE</thymeleaf.version>
+
+        <junit.jupiter.version>5.7.0</junit.jupiter.version>
+        <maven.surefire.plugin.version>2.22.0</maven.surefire.plugin.version>
+        <maven.failsafe.plugin.version>2.22.0</maven.failsafe.plugin.version>
+        <spring.test.version>5.3.8</spring.test.version>
+        <spring.security.test.version>4.0.4.RELEASE</spring.security.test.version>
+        <mockito.version>2.23.0</mockito.version>
+        <hamcrest.version>1.3</hamcrest.version>
+        <json.path.version>2.5.0</json.path.version>
     </properties>
 
     <build>
@@ -41,6 +50,28 @@
                 </configuration>
             </plugin>
 
+            <!-- Unit tests for Maven. (Plugin kicks-in in Maven TEST phase.) -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven.surefire.plugin.version}</version>
+                <configuration>
+                    <argLine>
+                        --illegal-access=permit
+                    </argLine>
+                </configuration>
+            </plugin>
+            <!-- Integration tests for Maven. (Plugin kicks-in for integration tests in Maven integration test phase) -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>${maven.failsafe.plugin.version}</version>
+                <configuration>
+                    <argLine>
+                        --illegal-access=permit
+                    </argLine>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 
@@ -86,6 +117,61 @@
             <artifactId>thymeleaf-spring5</artifactId>
             <version>${thymeleaf.version}</version>
         </dependency>
+
+
+        <!-- Test dependencies -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>${junit.jupiter.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>${junit.jupiter.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- Mockito -->
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>${mockito.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-junit-jupiter</artifactId>
+            <version>${mockito.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- for MockMvc -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>${spring.test.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- Spring Security test -->
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-test</artifactId>
+            <version>${spring.security.test.version}</version>
+        </dependency>
+
+        <!-- Hamcrest hasSize() hasProperty() in mockMvc tests -->
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-library</artifactId>
+            <version>${hamcrest.version}</version>
+        </dependency>
+        <!-- for jsonPath() in mockMvc tests -->
+        <dependency>
+            <groupId>com.jayway.jsonpath</groupId>
+            <artifactId>json-path</artifactId>
+            <version>${json.path.version}</version>
+        </dependency>
+
     </dependencies>
 
 
