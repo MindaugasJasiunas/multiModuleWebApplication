@@ -59,18 +59,20 @@ public class CartServiceImpl implements CartService {
         Cart userCart= createNewOrFindExistingCart(userEntity);
         int quantityInWarehouse= itemService.getItemQuantityInWarehouse(item);
 
-        //if item already in cart - update existing
-        for(CartItem cartItem : userCart.getCartItems()){
-            if(cartItem.getItem().getPublicId().equals(item.getPublicId())){
-                if(quantityInWarehouse <= (cartItem.getQuantity() + quantity)){
-                    //if wanted quantity is more than is in Warehouse - set maximum quantity available
-                    cartItem.setQuantity(itemService.getItemQuantityInWarehouse(item));
-                }else{
-                    //else if quantity that will be added doesn't exceed stock in Warehouse - update
-                    cartItem.setQuantity(cartItem.getQuantity() + quantity);
+        if(userCart.getCartItems()!=null){
+            //if item already in cart - update existing
+            for(CartItem cartItem : userCart.getCartItems()){
+                if(cartItem.getItem().getPublicId().equals(item.getPublicId())){
+                    if(quantityInWarehouse <= (cartItem.getQuantity() + quantity)){
+                        //if wanted quantity is more than is in Warehouse - set maximum quantity available
+                        cartItem.setQuantity(itemService.getItemQuantityInWarehouse(item));
+                    }else{
+                        //else if quantity that will be added doesn't exceed stock in Warehouse - update
+                        cartItem.setQuantity(cartItem.getQuantity() + quantity);
+                    }
+                    cartItemRepo.save(cartItem);
+                    return;
                 }
-                cartItemRepo.save(cartItem);
-                return;
             }
         }
         //if new item - create and add new in cart
