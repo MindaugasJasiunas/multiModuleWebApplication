@@ -65,6 +65,8 @@ class ItemServiceImplTest {
 
         //then
         assertEquals(0, result);
+
+        Mockito.verify(storeRepository, Mockito.times(1)).getStoreByStoreTitle(anyString());
     }
 
     @DisplayName("getItemQuantityInWarehouse()")
@@ -85,6 +87,9 @@ class ItemServiceImplTest {
 
         //then
         assertEquals(storeItem.getQuantity(), result);
+
+        Mockito.verify(storeRepository, Mockito.times(2)).getStoreByStoreTitle(anyString());
+        Mockito.verify(storeItemRepository, Mockito.times(2)).findStoreItemByItemAndStore(any(Item.class), any(Store.class));
     }
 
     @Test
@@ -121,6 +126,8 @@ class ItemServiceImplTest {
         assertTrue(storesWithQuantities.containsKey(store2));
         assertEquals(storeItem.getQuantity(), storesWithQuantities.get(store));
         assertEquals(storeItem2.getQuantity(), storesWithQuantities.get(store2));
+
+        Mockito.verify(storeItemRepository, Mockito.times(1)).findStoreItemsByItem_Id(anyLong());
     }
 
     @Test
@@ -137,6 +144,8 @@ class ItemServiceImplTest {
         assertNotNull(optionalItem);
         assertTrue(optionalItem.isPresent());
         assertEquals(item, optionalItem.get());
+
+        Mockito.verify(itemRepository, Mockito.times(1)).findItemByPublicId(any(UUID.class));
     }
 
     @DisplayName("findItemByPublicId() not existing")
@@ -151,6 +160,8 @@ class ItemServiceImplTest {
         //then
         assertNotNull(optionalItem);
         assertTrue(optionalItem.isEmpty());
+
+        Mockito.verify(itemRepository, Mockito.times(1)).findItemByPublicId(any(UUID.class));
     }
 
     @DisplayName("pageCount() 2 pages")
@@ -164,6 +175,8 @@ class ItemServiceImplTest {
 
         //then
         assertEquals(2, pages);
+
+        Mockito.verify(itemRepository, Mockito.times(1)).count();
     }
 
     @DisplayName("pageCount() 0 elements - 0 pages")
@@ -177,6 +190,8 @@ class ItemServiceImplTest {
 
         //then
         assertEquals(0, pages);
+
+        Mockito.verify(itemRepository, Mockito.times(1)).count();
     }
 
     @DisplayName("pageCount() 1 element - 1 page")
@@ -190,6 +205,8 @@ class ItemServiceImplTest {
 
         //then
         assertEquals(1, pages);
+
+        Mockito.verify(itemRepository, Mockito.times(1)).count();
     }
 
     @Test
@@ -214,6 +231,9 @@ class ItemServiceImplTest {
         //then
         assertNotNull(itemList);
         assertEquals(2, itemList.size());
+
+        Mockito.verify(itemRepository, Mockito.times(2)).findAll();
+        Mockito.verify(itemRepository, Mockito.times(1)).count();
     }
 
     @Test
@@ -231,6 +251,8 @@ class ItemServiceImplTest {
         assertNotNull(store);
         assertEquals(warehouse.getId(), store.getId());
         assertEquals(warehouse.getStoreTitle(), store.getStoreTitle());
+
+        Mockito.verify(storeRepository, Mockito.times(2)).getStoreByStoreTitle("Warehouse");
     }
 
     @DisplayName("getWarehouse() not exists - null")
@@ -244,6 +266,8 @@ class ItemServiceImplTest {
 
         //then
         assertNull(store);
+
+        Mockito.verify(storeRepository, Mockito.times(1)).getStoreByStoreTitle("Warehouse");
     }
 
     @Test
@@ -257,6 +281,8 @@ class ItemServiceImplTest {
 
         //then
         assertTrue(answer);
+
+        Mockito.verify(itemRepository, Mockito.times(1)).findItemByPublicId(any(UUID.class));
     }
 
     @DisplayName("isItemExistsByPublicId Not exist")
@@ -270,6 +296,8 @@ class ItemServiceImplTest {
 
         //then
         assertFalse(answer);
+
+        Mockito.verify(itemRepository, Mockito.times(1)).findItemByPublicId(any(UUID.class));
     }
 
     @Test
@@ -302,5 +330,10 @@ class ItemServiceImplTest {
         assertEquals(4, storeItemCaptured.getQuantity());
         assertEquals(store, storeItemCaptured.getStore());
         assertEquals(item, storeItemCaptured.getItem());
+
+        Mockito.verify(itemRepository, Mockito.times(1)).findItemByPublicId(any(UUID.class));
+        Mockito.verify(storeRepository, Mockito.times(4)).getStoreByStoreTitle("Warehouse");
+        Mockito.verify(storeItemRepository, Mockito.times(2)).findStoreItemByItemAndStore(any(Item.class), any(Store.class));
+        Mockito.verify(storeItemRepository, Mockito.times(1)).save(any(StoreItem.class));
     }
 }
