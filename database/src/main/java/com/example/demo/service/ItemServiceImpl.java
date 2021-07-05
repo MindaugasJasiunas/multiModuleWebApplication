@@ -74,14 +74,14 @@ public class ItemServiceImpl implements ItemService{
 
     @Override
     public List<Item> getItemsForRelatedProducts(int howMany) {
-//        Pageable pageAndSize= PageRequest.of(0, howMany);  //org.springframework.data.domain.Pageable
-//        return itemRepository.findAll(pageAndSize).getContent();
         //randomize items:
-        List<Item> items= (List<Item>) itemRepository.findAll();
-        int count= (int) itemRepository.count();
         List<Item> itemsRandomized=new ArrayList<>();
-        for(int i=0;i<howMany; i++){
-            itemsRandomized.add(items.get(new Random().nextInt(count)));
+        if(itemRepository.findAll() instanceof List<?>){
+            List<Item> items= (List<Item>) itemRepository.findAll();
+            int count= (int) itemRepository.count();
+            for(int i=0;i<howMany; i++){
+                itemsRandomized.add(items.get(new Random().nextInt(count)));
+            }
         }
         return itemsRandomized;
     }
