@@ -119,8 +119,10 @@ public class CartServiceImpl implements CartService {
 
         CurrencyUnit euro= Monetary.getCurrency("EUR");
         MonetaryAmount total= Monetary.getDefaultAmountFactory().setCurrency(euro).setNumber(0).create();
-        for(CartItem cartItem : cart.getCartItems()){
-            total= total.add(cartItem.getItem().getPrice().multiply(cartItem.getQuantity()));
+        if(cart.getCartItems()!=null){
+            for(CartItem cartItem : cart.getCartItems()){
+                total= total.add(cartItem.getItem().getPrice().multiply(cartItem.getQuantity()));
+            }
         }
         return total;
     }
@@ -129,8 +131,10 @@ public class CartServiceImpl implements CartService {
     public int getCartTotalAmountOfItems(UserEntity userEntity){
         Cart cart= createNewOrFindExistingCart(userEntity);
         int total=0;
-        for(CartItem cartItem : cart.getCartItems()){
-            total+= cartItem.getQuantity();
+        if(cart.getCartItems()!=null){
+            for(CartItem cartItem : cart.getCartItems()){
+                total+= cartItem.getQuantity();
+            }
         }
         return total;
     }
@@ -140,11 +144,13 @@ public class CartServiceImpl implements CartService {
     public void deleteAllItemsFromCartAndUpdateWarehouse(UserEntity userEntity){
         Cart cart= createNewOrFindExistingCart(userEntity);
         //delete all items from cart AND change warehouse quantity
-        Iterator<CartItem> i= cart.getCartItems().iterator();
-        while(i.hasNext()){
-            CartItem cartItem=i.next();
-            itemService.deleteFromWarehouse(cartItem);
-            cartItemRepo.delete(cartItem);
+        if(cart.getCartItems()!=null){
+            Iterator<CartItem> i= cart.getCartItems().iterator();
+            while(i.hasNext()){
+                CartItem cartItem=i.next();
+                itemService.deleteFromWarehouse(cartItem);
+                cartItemRepo.delete(cartItem);
+            }
         }
     }
 
@@ -166,18 +172,20 @@ public class CartServiceImpl implements CartService {
             //quantity in warehouse not 0
             Cart cart= createNewOrFindExistingCart(userEntity);
             //find wanted item
-            for(CartItem cartItem: cart.getCartItems()){
-                //found CartItem
-                if(cartItem.getItem().getPublicId().equals(itemPublicId)){
-                    //if new quantity 0 or less - delete cart item
-                    if(cartItem.getQuantity()-quantity <1){
-                        //delete cartItem
-                        cartItemRepo.delete(cartItem);
-                    //if new quantity more than 0 - change quantity
-                    }else if(cartItem.getQuantity()-quantity >0){
-                        cartItem.setQuantity(cartItem.getQuantity()-quantity);
-                        //update cartItem
-                        cartItemRepo.save(cartItem);
+            if(cart.getCartItems()!=null){
+                for(CartItem cartItem: cart.getCartItems()){
+                    //found CartItem
+                    if(cartItem.getItem().getPublicId().equals(itemPublicId)){
+                        //if new quantity 0 or less - delete cart item
+                        if(cartItem.getQuantity()-quantity <1){
+                            //delete cartItem
+                            cartItemRepo.delete(cartItem);
+                            //if new quantity more than 0 - change quantity
+                        }else if(cartItem.getQuantity()-quantity >0){
+                            cartItem.setQuantity(cartItem.getQuantity()-quantity);
+                            //update cartItem
+                            cartItemRepo.save(cartItem);
+                        }
                     }
                 }
             }
