@@ -53,7 +53,9 @@ public class UserEntityServiceImpl implements UserEntityService{
 
     @Override
     public Optional<UserEntity> saveOrUpdate(UserEntity user, boolean newPassword){
-        user.setEncryptedPassword(passwordEncoder.encode(user.getEncryptedPassword()));
+        if(newPassword){
+            user.setEncryptedPassword(passwordEncoder.encode(user.getEncryptedPassword()));
+        }
         return saveOrUpdate(user);
     }
 
