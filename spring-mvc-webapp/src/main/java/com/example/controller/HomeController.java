@@ -32,11 +32,13 @@ public class HomeController {
 
     @ModelAttribute //all method calls will have same model attribute
     public void addAttributes(Model model) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String email= auth.getName(); //get logged in username
-        UserEntity user=userEntityService.findUserEntityByEmail(email).orElse(null);
-        if(user!=null){
-            model.addAttribute("userName", user.getFirstName()+" "+user.getLastName());
+        if(SecurityContextHolder.getContext().getAuthentication() != null){
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            String email= auth.getName(); //get logged in username
+            UserEntity user=userEntityService.findUserEntityByEmail(email).orElse(null);
+            if(user!=null){
+                model.addAttribute("userName", user.getFirstName()+" "+user.getLastName());
+            }
         }
     }
 
