@@ -5,6 +5,7 @@ import com.example.demo.entity.Order;
 import com.example.demo.entity.authentication.AccountVerification;
 import com.example.demo.entity.authentication.UserEntity;
 import com.example.demo.service.UserEntityService;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -17,12 +18,10 @@ import org.thymeleaf.spring5.SpringTemplateEngine;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.money.MonetaryAmount;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Slf4j
+@Setter
 
 @PropertySource("classpath:mail.properties")
 @Service
@@ -52,6 +51,12 @@ public class EmailServiceImpl implements EmailService{
         this.thymeleafTemplateEngine = thymeleafTemplateEngine;
     }
 
+    /**
+     * Method checks if there is account verification already in DB
+     * Method used to check before creating new or updating.
+     * @param  email  UserEntity email
+     * @return        is record already in DB
+    **/
     @Override
     public boolean isAlreadyAccountVerificationByUserEmail(String email){
         if(userEntityService.findUserEntityByEmail(email).isPresent()){
@@ -90,7 +95,7 @@ public class EmailServiceImpl implements EmailService{
         }else if(isAlreadyAccountVerificationByUserEmail(email)){
             //update DB row & send email again
             AccountVerification alreadyInDB= accountVerificationRepo.findAccountVerificationByUserEntityPublicId(userEntity.getPublicId()).get();
-            alreadyInDB.setVerificationCode(verification.getVerificationCode());
+            alreadyInDB.setVerificationCode(verification.getVerificationCode()); //update verification code
             accountVerificationRepo.save(alreadyInDB);
         }
         try{
@@ -121,6 +126,9 @@ public class EmailServiceImpl implements EmailService{
 
     private void sendHtmlMessage(String to, String subject, String htmlBody) throws MessagingException {
         MimeMessage msg= emailSender.createMimeMessage();
+        if(to==null || subject ==null || htmlBody==null){
+            return;
+        }
 
         MimeMessageHelper helper= new MimeMessageHelper(msg, true); //'true'- multipart
         helper.setFrom(mailSender);
