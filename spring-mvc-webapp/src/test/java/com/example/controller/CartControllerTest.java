@@ -100,8 +100,6 @@ class CartControllerTest {
     @Test
     @WithMockUser(roles="CUSTOMER")
     void showShoppingCartPage() throws Exception {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
         Mockito.when(userEntityService.isUserExistsByUserEntityEmail(nullable(String.class))).thenReturn(true);
         Mockito.when(userEntityService.findUserEntityByEmail(nullable(String.class))).thenReturn(Optional.of(new UserEntity()));
         Cart cart=new Cart();
@@ -117,7 +115,7 @@ class CartControllerTest {
         Mockito.when(cartService.getCartTotalPrice(any(UserEntity.class))).thenReturn(Monetary.getDefaultAmountFactory().setCurrency("EUR").setNumber(1).create());
 
         mockMvc
-                .perform(get("/cart").principal(authentication))
+                .perform(get("/cart"))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("cartItems"))
                 .andExpect(model().attributeExists("cartTotal"))
@@ -134,12 +132,10 @@ class CartControllerTest {
     @Test
     @WithMockUser(roles="CUSTOMER")
     void showShoppingCartPage_userNotFoundInDB() throws Exception {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
         Mockito.when(userEntityService.isUserExistsByUserEntityEmail(nullable(String.class))).thenReturn(false);
 
         mockMvc
-                .perform(get("/cart").principal(authentication))
+                .perform(get("/cart"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/"));
 
@@ -150,10 +146,8 @@ class CartControllerTest {
     @Test
     @WithMockUser(roles={"ADMIN", "EMPLOYEE"})
     void showShoppingCartPage_wrongRole() throws Exception {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
         mockMvc
-                .perform(get("/cart").principal(authentication))
+                .perform(get("/cart"))
                 .andExpect(status().isForbidden());
     }
 
@@ -170,8 +164,6 @@ class CartControllerTest {
     @Test
     @WithMockUser(roles = "CUSTOMER")
     void showCheckoutPage() throws Exception {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
         Mockito.when(userEntityService.isUserExistsByUserEntityEmail(nullable(String.class))).thenReturn(true);
         UserEntity userEntity=new UserEntity();
         Mockito.when(userEntityService.findUserEntityByEmail(nullable(String.class))).thenReturn(Optional.of(userEntity));
@@ -189,7 +181,7 @@ class CartControllerTest {
         Mockito.when(cartService.getCartTotalPrice(any(UserEntity.class))).thenReturn(Monetary.getDefaultAmountFactory().setCurrency("EUR").setNumber(1.0).create());
 
         mockMvc
-                .perform(get("/checkout").principal(authentication))
+                .perform(get("/checkout"))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("cartItems"))
                 .andExpect(model().attributeExists("cartTotal"))
@@ -213,15 +205,13 @@ class CartControllerTest {
     @Test
     @WithMockUser(roles = "CUSTOMER")
     void showCheckoutPage_emptyCart() throws Exception {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
         Mockito.when(userEntityService.isUserExistsByUserEntityEmail(nullable(String.class))).thenReturn(true);
         UserEntity userEntity=new UserEntity();
         Mockito.when(userEntityService.findUserEntityByEmail(nullable(String.class))).thenReturn(Optional.of(userEntity));
         Mockito.when(cartService.getCartTotalAmountOfItems(any(UserEntity.class))).thenReturn(0);
 
         mockMvc
-                .perform(get("/checkout").principal(authentication))
+                .perform(get("/checkout"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/")); //redirects because cart is empty
 
@@ -234,10 +224,8 @@ class CartControllerTest {
     @Test
     @WithMockUser(roles={"ADMIN", "EMPLOYEE"})
     void showCheckoutPage_WrongRole() throws Exception {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
         mockMvc
-                .perform(get("/checkout").principal(authentication))
+                .perform(get("/checkout"))
                 .andExpect(status().isForbidden());
     }
 
@@ -245,8 +233,6 @@ class CartControllerTest {
     @Test
     @WithMockUser(roles= {"CUSTOMER"})
     void processAddToCart() throws Exception {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
         UUID randomUUID= UUID.randomUUID();
         Item item= new Item();
         item.setPublicId(randomUUID);
@@ -261,8 +247,7 @@ class CartControllerTest {
         mockMvc
                 .perform(post("/addToCart/{itemPublicId}", randomUUID).with(csrf())
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                        .param("inputQuantity", String.valueOf(quantity))
-                        .principal(authentication))
+                        .param("inputQuantity", String.valueOf(quantity)))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/item/"+randomUUID+"?added"));
 
@@ -278,8 +263,6 @@ class CartControllerTest {
     @Test
     @WithMockUser(roles= {"CUSTOMER"})
     void removeOneElement() throws Exception {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
         Mockito.when(userEntityService.isUserExistsByUserEntityEmail(nullable(String.class))).thenReturn(true);
         UserEntity userEntity=new UserEntity();
         Mockito.when(userEntityService.findUserEntityByEmail(nullable(String.class))).thenReturn(Optional.of(userEntity));
@@ -298,8 +281,7 @@ class CartControllerTest {
 
         mockMvc
                 .perform(post("/removeOne/{itemPublicId}", randomUUID).with(csrf())
-                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                        .principal(authentication))
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/cart"));
 
@@ -315,8 +297,6 @@ class CartControllerTest {
     @Test
     @WithMockUser(roles= {"CUSTOMER"})
     void addOneElement() throws Exception {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
         Mockito.when(userEntityService.isUserExistsByUserEntityEmail(nullable(String.class))).thenReturn(true);
         UserEntity userEntity=new UserEntity();
         Mockito.when(userEntityService.findUserEntityByEmail(nullable(String.class))).thenReturn(Optional.of(userEntity));
@@ -331,8 +311,7 @@ class CartControllerTest {
 
         mockMvc
                 .perform(post("/addOne/{itemPublicId}", randomUUID).with(csrf())
-                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                        .principal(authentication))
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/cart"));
 
