@@ -99,7 +99,7 @@ public class CartController {
 
             model.addAttribute("cartItems", userCart.getCartItems());
             model.addAttribute("cartTotal", cartService.getCartTotalPrice(userEntity));
-            model.addAttribute("user", user);
+            model.addAttribute("user", userEntity);
             model.addAttribute("totalNumberOfItems", cartService.getCartTotalAmountOfItems(userEntity));
             model.addAttribute("countries", UtilClass.getCountries());
             model.addAttribute("states", UtilClass.getStatesByCountry("Lithuania"));
