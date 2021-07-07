@@ -58,7 +58,6 @@ public class CartController {
         return "cart";
     }
 
-
     @PostMapping("/addToCart/{itemPublicId}")
     public String processAddToCart(@AuthenticationPrincipal UserDetails user, @PathVariable("itemPublicId") UUID itemPublicId, @RequestParam(value = "inputQuantity", defaultValue = "0") String quantity) {
         //if item exists
@@ -121,6 +120,12 @@ public class CartController {
         if (userEntityService.isUserExistsByUserEntityEmail(user.getUsername())) {
             UserEntity userEntity = userEntityService.findUserEntityByEmail(user.getUsername()).get();
             //check if card data is valid
+            System.out.println("model keySet: "+model.asMap().keySet());
+            System.out.println("model attribute bindingResult: "+model.getAttribute("org.springframework.validation.BindingResult.order"));
+
+            System.out.println("user : "+user);
+            System.out.println("order : "+order);
+            System.out.println("br errors: "+br.getAllErrors());
             br = cartService.checkBankingInfo(order, br);
 
             // *** send card info to bank ***
@@ -147,12 +152,14 @@ public class CartController {
             cartService.refreshCart(cart);
 
             //copy CartItems to OrderItems
-            for (CartItem cartItem : cart.getCartItems()) {
-                OrderItem temp = new OrderItem();
-                temp.setItem(cartItem.getItem());
-                temp.setQuantity(cartItem.getQuantity());
-                temp = orderService.saveOrderItem(temp);
-                order.addOrderItem(temp); //save every OrderItem
+            if(cart.getCartItems()!=null){
+                for (CartItem cartItem : cart.getCartItems()) {
+                    OrderItem temp = new OrderItem();
+                    temp.setItem(cartItem.getItem());
+                    temp.setQuantity(cartItem.getQuantity());
+                    temp = orderService.saveOrderItem(temp);
+                    order.addOrderItem(temp); //save every OrderItem
+                }
             }
 
             //set user from which account order was placed
@@ -171,7 +178,6 @@ public class CartController {
         }
         return "redirect:/";
     }
-
 
     @RequestMapping("/removeOne/{itemPublicId}")
     public String removeOneElement(@AuthenticationPrincipal UserDetails user, @PathVariable("itemPublicId") UUID itemPublicId) {
@@ -194,7 +200,8 @@ public class CartController {
     }
 
     @RequestMapping("/addOne/{itemPublicId}")
-    public String addOneElement(@AuthenticationPrincipal UserEntity user, @PathVariable("itemPublicId") UUID itemPublicId) {
+    public String addOneElement(@AuthenticationPrincipal UserDetails user, @PathVariable("itemPublicId") UUID itemPublicId) {
+        System.out.println(user);
         if (userEntityService.isUserExistsByUserEntityEmail(user.getUsername())) {
             UserEntity userEntity = userEntityService.findUserEntityByEmail(user.getUsername()).get();
             //if item exists
