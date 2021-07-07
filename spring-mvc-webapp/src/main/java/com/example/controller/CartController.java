@@ -12,8 +12,6 @@ import com.example.demo.service.authentication.EmailService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -44,7 +42,7 @@ public class CartController {
     }
 
     @RequestMapping("/cart")
-    public String showShoppingCartPage(@AuthenticationPrincipal User user, Model model){
+    public String showShoppingCartPage(@AuthenticationPrincipal UserEntity user, Model model){
         if(userEntityService.isUserExistsByUserEntityEmail(user.getUsername())){
             UserEntity userEntity= userEntityService.findUserEntityByEmail(user.getUsername()).get();
 
@@ -52,7 +50,7 @@ public class CartController {
             //update cart items before showing
             cartService.refreshCart(cart);
             model.addAttribute("cartItems", cart.getCartItems());
-            model.addAttribute("cartTotal", cartService.getCartTotalPrice(userEntity));
+            model.addAttribute("cartTotal", cartService.getCartTotalPrice(user));
         }else{
             return "redirect:/";
         }
@@ -61,22 +59,19 @@ public class CartController {
 
 
     @PostMapping("/addToCart/{itemPublicId}")
-    public String processAddToCart(@AuthenticationPrincipal User user, @PathVariable("itemPublicId") UUID itemPublicId, @RequestParam(value = "inputQuantity", defaultValue = "0") String quantity) {
+    public String processAddToCart(@AuthenticationPrincipal UserEntity user, @PathVariable("itemPublicId") UUID itemPublicId, @RequestParam(value = "inputQuantity", defaultValue = "0") String quantity) {
         //if item exists
         if(itemService.findItemByPublicId(itemPublicId).isPresent()){
-            if(userEntityService.findUserEntityByEmail(user.getUsername()).isPresent()) {
-                UserEntity userEntity = userEntityService.findUserEntityByEmail(user.getUsername()).get();
-                Item item= itemService.findItemByPublicId(itemPublicId).get();
+            Item item= itemService.findItemByPublicId(itemPublicId).get();
 
-                int itemQuantity = 0;
-                try {
-                    //server-side validation
-                    itemQuantity = Integer.parseInt(quantity);
+            int itemQuantity=0;
+            try{
+                //server-side validation
+                itemQuantity=Integer.parseInt(quantity);
 
-                    cartService.addItemToCart(userEntity, itemPublicId, itemQuantity);
-                } catch (NumberFormatException e) {
-                    return "redirect:/item/" + itemPublicId;
-                }
+                cartService.addItemToCart(user, itemPublicId, itemQuantity);
+            }catch (NumberFormatException e){
+                return "redirect:/item/"+itemPublicId;
             }
         }
         //return redirect to the same item with success
@@ -85,29 +80,27 @@ public class CartController {
 
 
     @GetMapping("/checkout")
-    public String showCheckoutPage(@AuthenticationPrincipal User user, Model model){
+    public String showCheckoutPage(@AuthenticationPrincipal UserEntity user, Model model){
         if(userEntityService.isUserExistsByUserEntityEmail(user.getUsername())) {
-            UserEntity userEntity= userEntityService.findUserEntityByEmail(user.getUsername()).get();
-
             //if there is no items in cart and user going to checkout page - redirect to main page
-            if (cartService.getCartTotalAmountOfItems(userEntity) == 0) {
+            if (cartService.getCartTotalAmountOfItems(user) == 0) {
                 return "redirect:/";
             }
-            Cart userCart = cartService.createNewOrFindExistingCart(userEntity);
+            Cart userCart = cartService.createNewOrFindExistingCart(user);
             //update cart items before showing
             cartService.refreshCart(userCart);
 
             model.addAttribute("cartItems", userCart.getCartItems());
-            model.addAttribute("cartTotal", cartService.getCartTotalPrice(userEntity));
-            model.addAttribute("user", userEntity);
-            model.addAttribute("totalNumberOfItems", cartService.getCartTotalAmountOfItems(userEntity));
+            model.addAttribute("cartTotal", cartService.getCartTotalPrice(user));
+            model.addAttribute("user", user);
+            model.addAttribute("totalNumberOfItems", cartService.getCartTotalAmountOfItems(user));
             model.addAttribute("countries", UtilClass.getCountries());
             model.addAttribute("states", UtilClass.getStatesByCountry("Lithuania"));
             model.addAttribute("contextPath", webpageContextPath);
 
             Order order=new Order();
-            order.setFirstName(userEntity.getFirstName());
-            order.setLastName(userEntity.getLastName());
+            order.setFirstName(user.getFirstName());
+            order.setLastName(user.getLastName());
             model.addAttribute("order", order);
 
             return "checkout";
@@ -117,97 +110,87 @@ public class CartController {
     }
 
     @PostMapping("/checkout")
-    public String processCheckout(@Valid @ModelAttribute("order") Order order, BindingResult br, @AuthenticationPrincipal User user, Model model, HttpServletRequest request){
-        if(userEntityService.isUserExistsByUserEntityEmail(user.getUsername())) {
-            UserEntity userEntity = userEntityService.findUserEntityByEmail(user.getUsername()).get();
-            //check if card data is valid
-            br = cartService.checkBankingInfo(order, br);
+    public String processCheckout(@Valid @ModelAttribute("order") Order order, BindingResult br, @AuthenticationPrincipal UserEntity userEntity, Model model, HttpServletRequest request){
+        //check if card data is valid
+        br=cartService.checkBankingInfo(order, br);
 
-            // *** send card info to bank ***
-            //br=bankingService.validateAndCheckout(order, br);
+        // *** send card info to bank ***
+        //br=bankingService.validateAndCheckout(order, br);
 
-            //if has form or banking card errors -return to the same page with errors
-            if (br.hasErrors()) {
-                Cart userCart = cartService.createNewOrFindExistingCart(userEntity);
-                //update cart items before showing
-                cartService.refreshCart(userCart);
-                model.addAttribute("cartItems", userCart.getCartItems());
-                model.addAttribute("cartTotal", cartService.getCartTotalPrice(userEntity));
-                model.addAttribute("user", userEntity);
-                model.addAttribute("totalNumberOfItems", cartService.getCartTotalAmountOfItems(userEntity));
-                model.addAttribute("order", order);
-                model.addAttribute("countries", UtilClass.getCountries());
-                model.addAttribute("states", UtilClass.getStatesByCountry("Lithuania"));
-                model.addAttribute("contextPath", webpageContextPath);
-                return "checkout";
-            }
-            //no errors
-            Cart cart = cartService.createNewOrFindExistingCart(userEntity);
-            //refresh cart one last time
-            cartService.refreshCart(cart);
-
-            //copy CartItems to OrderItems
-            for (CartItem cartItem : cart.getCartItems()) {
-                OrderItem temp = new OrderItem();
-                temp.setItem(cartItem.getItem());
-                temp.setQuantity(cartItem.getQuantity());
-                temp = orderService.saveOrderItem(temp);
-                order.addOrderItem(temp); //save every OrderItem
-            }
-
-            //set user from which account order was placed
-            order.setUser(userEntity);
-
-            //save Order
-            orderService.saveOrder(order);
-
-            //send email with order info
-            emailService.sendOrderConfirmationEmail(userEntity.getEmail(), order, cartService.getCartTotalPrice(userEntity));
-
-            //remove CartItems from Cart & update warehouse quantity
-            cartService.deleteAllItemsFromCartAndUpdateWarehouse(userEntity);
-
-            return "redirect:/?successCheckout";
+        //if has form or banking card errors -return to the same page with errors
+        if(br.hasErrors()){
+            Cart userCart = cartService.createNewOrFindExistingCart(userEntity);
+            //update cart items before showing
+            cartService.refreshCart(userCart);
+            model.addAttribute("cartItems", userCart.getCartItems());
+            model.addAttribute("cartTotal", cartService.getCartTotalPrice(userEntity));
+            model.addAttribute("user", userEntity);
+            model.addAttribute("totalNumberOfItems", cartService.getCartTotalAmountOfItems(userEntity));
+            model.addAttribute("order", order);
+            model.addAttribute("countries", UtilClass.getCountries());
+            model.addAttribute("states", UtilClass.getStatesByCountry("Lithuania"));
+            model.addAttribute("contextPath", webpageContextPath);
+            return "checkout";
         }
-        return "redirect:/";
+        //no errors
+        Cart cart= cartService.createNewOrFindExistingCart(userEntity);
+        //refresh cart one last time
+        cartService.refreshCart(cart);
+
+        //copy CartItems to OrderItems
+        for(CartItem cartItem: cart.getCartItems()){
+            OrderItem temp=new OrderItem();
+            temp.setItem(cartItem.getItem());
+            temp.setQuantity(cartItem.getQuantity());
+            temp=orderService.saveOrderItem(temp);
+            order.addOrderItem(temp); //save every OrderItem
+        }
+
+        //set user from which account order was placed
+        order.setUser(userEntity);
+
+        //save Order
+        orderService.saveOrder(order);
+
+        //send email with order info
+        emailService.sendOrderConfirmationEmail(userEntity.getEmail(), order, cartService.getCartTotalPrice(userEntity));
+
+        //remove CartItems from Cart & update warehouse quantity
+        cartService.deleteAllItemsFromCartAndUpdateWarehouse(userEntity);
+
+        return "redirect:/?successCheckout";
     }
 
 
     @RequestMapping("/removeOne/{itemPublicId}")
-    public String removeOneElement(@AuthenticationPrincipal User user, @PathVariable("itemPublicId") UUID itemPublicId) {
+    public String removeOneElement(@AuthenticationPrincipal UserEntity user, @PathVariable("itemPublicId") UUID itemPublicId) {
         //if item exists
         if(itemService.findItemByPublicId(itemPublicId).isPresent()) {
-            if (userEntityService.isUserExistsByUserEntityEmail(user.getUsername())) {
-                UserEntity userEntity = userEntityService.findUserEntityByEmail(user.getUsername()).get();
-                Item item = itemService.findItemByPublicId(itemPublicId).get();
+            Item item = itemService.findItemByPublicId(itemPublicId).get();
 
-                //remove item from cart
-                cartService.removeItemFromCart(userEntity, itemPublicId, 1);
+            //remove item from cart
+            cartService.removeItemFromCart(user, itemPublicId, 1);
 
-                //refresh cart before showing view
-                Cart cart = cartService.createNewOrFindExistingCart(userEntity);
-                cartService.refreshCart(cart);
-            }
+            //refresh cart before showing view
+            Cart cart= cartService.createNewOrFindExistingCart(user);
+            cartService.refreshCart(cart);
         }
         //return redirect to same page - cart
         return "redirect:/cart";
     }
 
     @RequestMapping("/addOne/{itemPublicId}")
-    public String addOneElement(@AuthenticationPrincipal User user, @PathVariable("itemPublicId") UUID itemPublicId) {
+    public String addOneElement(@AuthenticationPrincipal UserEntity user, @PathVariable("itemPublicId") UUID itemPublicId) {
         //if item exists
         if(itemService.findItemByPublicId(itemPublicId).isPresent()) {
-            if(userEntityService.isUserExistsByUserEntityEmail(user.getUsername())) {
-                UserEntity userEntity = userEntityService.findUserEntityByEmail(user.getUsername()).get();
-                Item item = itemService.findItemByPublicId(itemPublicId).get();
+            Item item = itemService.findItemByPublicId(itemPublicId).get();
 
-                //add item to cart
-                cartService.addItemToCart(userEntity, itemPublicId, 1);
+            //add item to cart
+            cartService.addItemToCart(user, itemPublicId, 1);
 
-                //refresh cart before showing view
-                Cart cart = cartService.createNewOrFindExistingCart(userEntity);
-                cartService.refreshCart(cart);
-            }
+            //refresh cart before showing view
+            Cart cart= cartService.createNewOrFindExistingCart(user);
+            cartService.refreshCart(cart);
         }
         //return redirect to same page - cart
         return "redirect:/cart";
