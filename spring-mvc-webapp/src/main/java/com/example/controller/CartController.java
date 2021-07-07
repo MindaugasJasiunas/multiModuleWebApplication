@@ -120,12 +120,6 @@ public class CartController {
         if (userEntityService.isUserExistsByUserEntityEmail(user.getUsername())) {
             UserEntity userEntity = userEntityService.findUserEntityByEmail(user.getUsername()).get();
             //check if card data is valid
-            System.out.println("model keySet: "+model.asMap().keySet());
-            System.out.println("model attribute bindingResult: "+model.getAttribute("org.springframework.validation.BindingResult.order"));
-
-            System.out.println("user : "+user);
-            System.out.println("order : "+order);
-            System.out.println("br errors: "+br.getAllErrors());
             br = cartService.checkBankingInfo(order, br);
 
             // *** send card info to bank ***
