@@ -83,7 +83,7 @@ public class EmailServiceImpl implements EmailService{
 
     @Override
     public void sendVerificationEmail(String email, boolean resetPassword){
-        if(userEntityService.findUserEntityByEmail(email).isEmpty()){
+        if(userEntityService.findUserEntityByEmail(email).isEmpty() || email==null){
             return;
         }
         //make DB entry
