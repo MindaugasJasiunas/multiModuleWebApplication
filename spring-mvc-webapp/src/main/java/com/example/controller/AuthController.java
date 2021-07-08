@@ -2,12 +2,10 @@ package com.example.controller;
 
 import com.example.demo.entity.authentication.AccountVerification;
 import com.example.demo.entity.authentication.PasswordReset;
-import com.example.demo.entity.authentication.Role;
 import com.example.demo.entity.authentication.UserEntity;
 import com.example.demo.service.UserEntityService;
 import com.example.demo.service.authentication.EmailService;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -44,7 +42,7 @@ public class AuthController {
     }
 
     @PostMapping("/forgot")
-    public String showForgotPasswordPage(@RequestParam(name = "email", required = false) String email){
+    public String processForgotPasswordPage(@RequestParam(name = "email", required = false) String email){
         if(email!=null){
             if(!emailService.isAlreadyAccountVerificationByUserEmail(email)){ //if there is not already saved - proceed
                 if(userEntityService.findUserEntityByEmail(email).isPresent()){
@@ -67,7 +65,6 @@ public class AuthController {
 //        (HttpServletRequest request)
 //        request.getParameter("encryptedPassword")     //by name attr changed because ' th:field="${user.encryptedPassword}" '
 //        request.getParameter("inputPasswordConfirm")  //by name
-
         //validate & do stuff
         if(encryptedPassword==null){
             // error propagates to bindingResult by itself
@@ -80,7 +77,6 @@ public class AuthController {
         }
 
         if(br.hasErrors()) {
-//            br.getAllErrors().forEach(e -> System.out.println(e.toString()));
             return "register";
         }else{
             Optional<UserEntity> userSaved= userEntityService.saveOrUpdate(user, true);
@@ -101,13 +97,12 @@ public class AuthController {
                 //display special form to reset password
                 return "redirect:/verify/"+uuid+"/new";
             }else{
-                //if not reset= enable user
+                //if not reset password - enable user
                 UUID userEntityPublicId= verification.getUserEntityPublicId();
                 UserEntity userEntity= userEntityService.findUserEntityByPublicId(userEntityPublicId).get();
                 userEntityService.makeUserEnabledByEmail(userEntity.getEmail());
 
                 //delete entry
-//                UserEntity userEntity=userEntityService.findUserEntityByPublicId(verification.getUserEntityPublicId()).get();
                 emailService.deleteAccountVerificationByUserEntityPublicId(userEntity.getPublicId());
             }
         }
