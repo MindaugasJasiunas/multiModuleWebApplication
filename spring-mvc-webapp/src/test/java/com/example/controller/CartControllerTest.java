@@ -4,13 +4,8 @@ import com.example.ControllerTestConfig;
 import com.example.configuration.MyAppConfiguration;
 import com.example.demo.entity.*;
 import com.example.demo.entity.Order;
-import com.example.demo.entity.authentication.Authority;
-import com.example.demo.entity.authentication.Role;
 import com.example.demo.entity.authentication.UserEntity;
-import com.example.demo.service.CartService;
-import com.example.demo.service.ItemService;
-import com.example.demo.service.OrderService;
-import com.example.demo.service.UserEntityService;
+import com.example.demo.service.*;
 import com.example.demo.service.authentication.EmailService;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -51,9 +46,7 @@ import java.util.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.mockingDetails;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -84,10 +77,7 @@ class CartControllerTest {
     @BeforeEach
     void setUp() {
         //reset the mocked classes to prevent leakage
-        Mockito.reset(userEntityService);
-        Mockito.reset(cartService);
-        Mockito.reset(itemService);
-        Mockito.reset(orderService);
+        Mockito.reset(userEntityService, cartService, itemService, orderService, emailService);
 
         mockMvc = MockMvcBuilders
                 .webAppContextSetup(context)
@@ -322,5 +312,124 @@ class CartControllerTest {
         Mockito.verify(cartService, Mockito.times(1)).createNewOrFindExistingCart(any(UserEntity.class));
         Mockito.verify(cartService, Mockito.times(1)).refreshCart(any(Cart.class));
     }
+
+    //Spring mockMvc doesn't consider validation @Valid - TEST NOT WORKING (Only manual br.rejectValue("fieldName", "error.fieldName", "error message") works)
+    @Disabled
+    @DisplayName("processCheckout() with auth user + CUSTOMER role - no errors in order")
+    @Test
+    @WithMockUser(roles = {"CUSTOMER"})
+    void processCheckout() throws Exception {
+        Mockito.when(userEntityService.isUserExistsByUserEntityEmail(nullable(String.class))).thenReturn(true);
+        UserEntity userEntity = new UserEntity();
+        Mockito.when(userEntityService.findUserEntityByEmail(nullable(String.class))).thenReturn(Optional.of(userEntity));
+        BindingResult br = mock(BindingResult.class);
+
+        Mockito.when(cartService.checkBankingInfo(any(Order.class), any(BindingResult.class))).thenReturn(br);
+
+        Mockito.when(br.hasErrors()).thenReturn(false);
+        Cart cart = new Cart();
+        CartItem cartItem = new CartItem();
+        cartItem.setQuantity(1);
+        Item item = new Item();
+        cartItem.setItem(item);
+        cart.addCartItem(cartItem);
+        Mockito.when(cartService.createNewOrFindExistingCart(any(UserEntity.class))).thenReturn(cart);
+        Mockito.doNothing().when(cartService).refreshCart(any(Cart.class));
+
+        Mockito.when(orderService.saveOrderItem(any(OrderItem.class))).thenReturn(new OrderItem());
+        Order order = new Order();
+        Mockito.when(orderService.saveOrder(any(Order.class))).thenReturn(order);
+        Mockito.when(cartService.getCartTotalPrice(any(UserEntity.class))).thenReturn(Monetary.getDefaultAmountFactory().setCurrency("EUR").setNumber(1).create());
+        Mockito.doNothing().when(emailService).sendOrderConfirmationEmail(nullable(String.class), any(Order.class), any(MonetaryAmount.class));
+        Mockito.doNothing().when(cartService).deleteAllItemsFromCartAndUpdateWarehouse(any(UserEntity.class));
+
+        mockMvc
+                .perform(post("/checkout").with(csrf())
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("firstName", "")  // test should fail but doesn't
+                        .param("lastName", "Testy")
+                        .param("address", "1234 Street")
+                        .param("country", "Lithuania")
+                        .param("state", "Vilnius")
+                        .param("zipCode", "12345")
+                        .param("expiration", "09/99")
+                        .param("ccv", "123")
+                        .param("creditCardNumber", "5167999988887777")
+                        .param("cardName", "Test Testy"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(model().attributeExists("order"))
+                .andExpect(model().attributeHasNoErrors("order"))
+                .andExpect(redirectedUrl("/?successCheckout"));
+
+        Mockito.verify(userEntityService, Mockito.times(1)).isUserExistsByUserEntityEmail(nullable(String.class));
+        Mockito.verify(userEntityService, Mockito.times(1)).findUserEntityByEmail(nullable(String.class));
+        Mockito.verify(cartService, Mockito.times(1)).checkBankingInfo(any(Order.class), any(BindingResult.class));
+        Mockito.verify(cartService, Mockito.times(1)).createNewOrFindExistingCart(any(UserEntity.class));
+        Mockito.verify(cartService, Mockito.times(1)).refreshCart(any(Cart.class));
+        Mockito.verify(orderService, Mockito.times(1)).saveOrderItem(any(OrderItem.class));
+        Mockito.verify(orderService, Mockito.times(1)).saveOrder(any(Order.class));
+        Mockito.verify(cartService, Mockito.times(1)).getCartTotalPrice(any(UserEntity.class));
+        Mockito.verify(emailService, Mockito.times(1)).sendOrderConfirmationEmail(nullable(String.class), any(Order.class), any(MonetaryAmount.class));
+        Mockito.verify(cartService, Mockito.times(1)).deleteAllItemsFromCartAndUpdateWarehouse(any(UserEntity.class));
+        Mockito.verify(cartService, Mockito.never()).getCartTotalAmountOfItems(userEntity);
+        Mockito.verify(br, Mockito.times(1)).hasErrors();
+    }
+
+
+    //Spring mockMvc doesn't consider validation @Valid - TEST NOT WORKING (Only manual br.rejectValue("fieldName", "error.fieldName", "error message") works)
+    @Disabled
+    @DisplayName("processCheckout() with auth user + CUSTOMER role - order has errors")
+    @Test
+    @WithMockUser(roles = {"CUSTOMER"})
+    void processCheckout_hasErrors() throws Exception {
+        Mockito.when(userEntityService.isUserExistsByUserEntityEmail(nullable(String.class))).thenReturn(true);
+        UserEntity userEntity = new UserEntity();
+        Mockito.when(userEntityService.findUserEntityByEmail(nullable(String.class))).thenReturn(Optional.of(userEntity));
+        BindingResult br = mock(BindingResult.class);
+
+        Mockito.when(cartService.checkBankingInfo(any(Order.class), any(BindingResult.class))).thenReturn(br);
+
+        Mockito.when(br.hasErrors()).thenReturn(true);
+        Cart cart = new Cart();
+        CartItem cartItem = new CartItem();
+        cartItem.setQuantity(1);
+        Item item = new Item();
+        item.setPrice(Monetary.getDefaultAmountFactory().setCurrency("EUR").setNumber(1).create());
+        cartItem.setItem(item);
+        cart.addCartItem(cartItem);
+        Mockito.when(cartService.createNewOrFindExistingCart(any(UserEntity.class))).thenReturn(cart);
+        Mockito.doNothing().when(cartService).refreshCart(any(Cart.class));
+        Mockito.when(cartService.getCartTotalPrice(any(UserEntity.class))).thenReturn(Monetary.getDefaultAmountFactory().setCurrency("EUR").setNumber(1).create());
+        Mockito.when(cartService.getCartTotalAmountOfItems(any(UserEntity.class))).thenReturn(5);
+
+        mockMvc
+                .perform(post("/checkout").with(csrf())
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("firstName", "") //should have field error
+                        .param("lastName", "Testy")
+                        .param("address", "1234 Street")
+                        .param("country", "Lithuania")
+                        .param("state", "Vilnius")
+                        .param("zipCode", "12345")
+                        .param("expiration", "09/99")
+                        .param("ccv", "123")
+                        .param("creditCardNumber", "5167999988887777")
+                        .param("cardName", "Test Testy"))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("order"))
+                .andExpect(model().attributeHasErrors("order"))
+                .andExpect(model().attributeHasFieldErrors("order", "firstName"))
+                .andExpect(view().name("checkout"));
+
+        Mockito.verify(userEntityService, Mockito.times(1)).isUserExistsByUserEntityEmail(nullable(String.class));
+        Mockito.verify(userEntityService, Mockito.times(1)).findUserEntityByEmail(nullable(String.class));
+        Mockito.verify(cartService, Mockito.times(1)).checkBankingInfo(any(Order.class), any(BindingResult.class));
+        Mockito.verify(br, Mockito.times(1)).hasErrors();
+        Mockito.verify(cartService, Mockito.times(1)).createNewOrFindExistingCart(any(UserEntity.class));
+        Mockito.verify(cartService, Mockito.times(1)).refreshCart(any(Cart.class));
+        Mockito.verify(cartService, Mockito.times(1)).getCartTotalPrice(any(UserEntity.class));
+        Mockito.verify(cartService, Mockito.times(1)).getCartTotalAmountOfItems(any(UserEntity.class));
+    }
+
 
 }
