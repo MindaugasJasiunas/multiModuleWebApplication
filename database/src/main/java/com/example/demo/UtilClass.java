@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UtilClass {
+    //TODO: make countries with states load from file
 
     public static List<String> getCountries(){
         List<String> countries= new ArrayList<>();
