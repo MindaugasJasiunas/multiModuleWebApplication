@@ -117,6 +117,7 @@ public class CartController {
 
     @PostMapping("/checkout")
     public String processCheckout(@Valid @ModelAttribute("order") Order order, BindingResult br, @AuthenticationPrincipal UserDetails user, Model model, HttpServletRequest request){
+    // without mocking - returns null but clearly calls userEntityRepo. If calling to userEntityRepo directly from this class - we get user we want. (not optional empty)
         if (userEntityService.isUserExistsByUserEntityEmail(user.getUsername())) {
             UserEntity userEntity = userEntityService.findUserEntityByEmail(user.getUsername()).get();
             //check if card data is valid
