@@ -116,10 +116,9 @@ public class CartServiceImpl implements CartService {
     @Override
     public MonetaryAmount getCartTotalPrice(UserEntity userEntity){
         Cart cart= createNewOrFindExistingCart(userEntity);
-
         CurrencyUnit euro= Monetary.getCurrency("EUR");
         MonetaryAmount total= Monetary.getDefaultAmountFactory().setCurrency(euro).setNumber(0).create();
-        if(cart.getCartItems()!=null){
+        if(cart!=null && cart.getCartItems()!=null){
             for(CartItem cartItem : cart.getCartItems()){
                 total= total.add(cartItem.getItem().getPrice().multiply(cartItem.getQuantity()));
             }
