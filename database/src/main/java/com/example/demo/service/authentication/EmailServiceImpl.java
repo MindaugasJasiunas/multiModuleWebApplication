@@ -140,7 +140,6 @@ public class EmailServiceImpl implements EmailService{
     }
 
 
-
     private void sendOrderMessageUsingThymeleafTemplate(String to, String subject, Map< String, Object> arguments) throws MessagingException {
         Context ctx= new Context();   // import org.thymeleaf.Context
         ctx.setVariables(arguments);
@@ -155,7 +154,5 @@ public class EmailServiceImpl implements EmailService{
         String htmlBody= thymeleafTemplateEngine.process(mailVerificationTemplate, ctx);
         sendHtmlMessage(to, subject, htmlBody);
     }
-
-
 
 }
