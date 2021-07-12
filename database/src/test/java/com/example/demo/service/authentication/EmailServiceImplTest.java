@@ -39,6 +39,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.mock;
 
+@PropertySource("classpath:mail.properties")
 @ExtendWith(MockitoExtension.class)
 class EmailServiceImplTest {
     @Mock
@@ -274,7 +275,8 @@ class EmailServiceImplTest {
 
 
         String emailContent= "htmlBody";
-        Mockito.when(thymeleafTemplateEngine.process(nullable(String.class), any(Context.class))).thenReturn(emailContent);
+        emailService.setMailOrderTemplate("emails/placedOrderEmailForm.html");
+        Mockito.when(thymeleafTemplateEngine.process(any(String.class), any(Context.class))).thenReturn(emailContent);
 
         MimeMessage mimeMessage= new JavaMailSenderImpl().createMimeMessage();
         Mockito.when(emailSender.createMimeMessage()).thenReturn(mimeMessage);
