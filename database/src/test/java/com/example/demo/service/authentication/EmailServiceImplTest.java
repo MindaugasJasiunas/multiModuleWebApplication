@@ -274,7 +274,8 @@ class EmailServiceImplTest {
 
 
         String emailContent= "htmlBody";
-        Mockito.when(thymeleafTemplateEngine.process(nullable(String.class), any(Context.class))).thenReturn(emailContent);
+        emailService.setMailOrderTemplate("temp_template");
+        Mockito.when(thymeleafTemplateEngine.process(any(String.class), any(Context.class))).thenReturn(emailContent);
 
         MimeMessage mimeMessage= new JavaMailSenderImpl().createMimeMessage();
         Mockito.when(emailSender.createMimeMessage()).thenReturn(mimeMessage);
