@@ -24,6 +24,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import javax.money.Monetary;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,6 +67,9 @@ class RestfulControllerTest {
         for(int i=0; i<10; i++){
             Item temporaryItem=new Item();
             temporaryItem.setId(i);
+            temporaryItem.setTitle("itemTitle"+i);
+            temporaryItem.setDescription("desc"+i);
+            temporaryItem.setPrice(Monetary.getDefaultAmountFactory().setCurrency("EUR").setNumber(15.15).create());
             itemsToPopulatePage.add(temporaryItem);
         }
         Page<Item> page= new PageImpl<>(itemsToPopulatePage);
@@ -75,7 +79,13 @@ class RestfulControllerTest {
             mockMvc.perform(get("/api/v1/items"))
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                    .andExpect(jsonPath("$", hasSize(10)));  // com.jayway.jsonpath:json-path dependency needed for jsonPath()  // com.hamcrest:hamcrest-library dependency needed for hasSize() and hasProperty()
+                    .andExpect(jsonPath("$", hasSize(10)))  // com.jayway.jsonpath:json-path dependency needed for jsonPath()  // com.hamcrest:hamcrest-library dependency needed for hasSize() and hasProperty()
+                    .andExpect(jsonPath("$[0].id", is(0)))
+                    .andExpect(jsonPath("$[0].title", is("itemTitle0")))
+                    .andExpect(jsonPath("$[0].description", is("desc0")))
+                    .andExpect(jsonPath("$[0].price.currency.currencyCode", is("EUR")))
+                    .andExpect(jsonPath("$[0].price.number", is(15.15)));
+
 
         Mockito.verify(itemService, Mockito.times(1)).findAll(ArgumentMatchers.any(Pageable.class));
 
@@ -88,7 +98,10 @@ class RestfulControllerTest {
         mockMvc.perform(get("/api/v1/states/Lithuania"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$", hasSize(3)));
+                .andExpect(jsonPath("$", hasSize(3)))
+                .andExpect(jsonPath("$[0]", is("Vilnius")))
+                .andExpect(jsonPath("$[1]", is("Kaunas")))
+                .andExpect(jsonPath("$[2]", is("Klaipeda")));
     }
 
     @DisplayName("getStatesByCountry() - Latvia")
@@ -97,7 +110,10 @@ class RestfulControllerTest {
         mockMvc.perform(get("/api/v1/states/Latvia"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$", hasSize(3)));
+                .andExpect(jsonPath("$", hasSize(3)))
+                .andExpect(jsonPath("$[0]", is("Riga")))
+                .andExpect(jsonPath("$[1]", is("Liepaja")))
+                .andExpect(jsonPath("$[2]", is("Jurmala")));
     }
 
     @DisplayName("getStatesByCountry() - Estonia")
@@ -106,7 +122,10 @@ class RestfulControllerTest {
         mockMvc.perform(get("/api/v1/states/Estonia"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$", hasSize(3)));
+                .andExpect(jsonPath("$", hasSize(3)))
+                .andExpect(jsonPath("$[0]", is("Tallinn")))
+                .andExpect(jsonPath("$[1]", is("Tartu")))
+                .andExpect(jsonPath("$[2]", is("Parnu")));
     }
 
     @DisplayName("getStatesByCountry() - UK")
@@ -115,6 +134,9 @@ class RestfulControllerTest {
         mockMvc.perform(get("/api/v1/states/UK"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$", hasSize(3)));
+                .andExpect(jsonPath("$", hasSize(3)))
+                .andExpect(jsonPath("$[0]", is("London")))
+                .andExpect(jsonPath("$[1]", is("Birmingham")))
+                .andExpect(jsonPath("$[2]", is("Manchester")));
     }
 }
