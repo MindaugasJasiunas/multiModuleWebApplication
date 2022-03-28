@@ -28,7 +28,7 @@ Spring JPA used in database module for easier work with data in DB. No-code repo
 
 For items Rest GET endpoint created. JQuery with AJAX used in main page to call application REST endpoint and get items list by page. Then popolate view elements. To use REST and to convert POJO's to JSON and vice versa, Jackson Databind dependency(libraries) is used.
 
-Pure JS DOM used in main page to provide full functionality for pagination buttons. Works from 1 to n pages. If there is not a full page of elements - not used HTML elements is hidden to prevent product info from last page.
+Vanilla JS used in main page DOM to provide full functionality for pagination buttons. Works from 1 to n pages. If there is not a full page of elements - not used HTML elements (cards) is hidden to prevent product info from last page.
 
 Moneta(JSR 354 reference implementation) used for Item entity price field & 'numeric' type in postgreSQL.
 
